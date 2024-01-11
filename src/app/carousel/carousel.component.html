@@ -1,0 +1,17 @@
+<div>
+    <carousel>            
+     
+        @for (item of carouselItems; track item.imageUrl) {
+            <slide>
+            <img [src]="item.imageUrl" alt="{{ item.caption }}">
+
+        <div class="carousel-caption">
+          <h4>{{ item.caption }}</h4>
+        </div>
+    </slide>
+    }
+       
+    </carousel>
+  </div>
+
+  
