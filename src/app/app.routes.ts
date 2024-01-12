@@ -1,6 +1,6 @@
-import { Routes } from '@angular/router';
+import { Routes} from '@angular/router';
 import { HomeComponent } from  './home/home.component';
-
+import { LoginComponent } from './login/login.component';
 import { CarouselComponent } from './carousel/carousel.component';
 
 
@@ -19,6 +19,11 @@ export const routes: Routes = [
         {
         path: 'carouselcomponent',
         component: CarouselComponent
+        },
+        {
+        path: 'login',
+        component: LoginComponent
         }
+    
 
 ];

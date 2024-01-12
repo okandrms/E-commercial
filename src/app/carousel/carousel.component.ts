@@ -21,9 +21,9 @@ export class CarouselComponent {
   };
 
   carouselItems = [
-    { imageUrl: '../assets/images/1.jpg', caption: 'Belgium Kits' },
+    { imageUrl: '../assets/images/monchengladbach2.jpeg', caption: 'Mönchengladbach Kits' },
     { imageUrl: '../assets/images/Milan.jpg', caption: 'Milan Kits' },
-    { imageUrl: '../assets/images/Bvb.jpg', caption: 'Borussia Dortmund Kits' }
+    { imageUrl: '../assets/images/Liv.jpg', caption: 'Liverpool Kits' }
     // Add more items as needed
   ];
 

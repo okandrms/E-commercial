@@ -1,5 +1,8 @@
 .nav-item :hover{
-    background-color: red;
+    background-color: rgb(219, 38, 38);
     color: white;
 
 }
+.custom-header {
+    background-color: rgb(219, 38, 38);
+  }
