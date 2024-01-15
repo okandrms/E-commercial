@@ -2,14 +2,15 @@
   <div class="row">
     <header class="page-header d-flex  h-100 custom-header">
       <div class="col-md-2  p-4 p-3 text-white">
-        <p>Kits of European Teams</p>
+       <img class="logo" src="assets/images/Logo.png" alt="">
       </div>
-      <div class="col-md-6 text-center ">
+      <div class="col-md-8 text-center ">
         <form class="d-flex input-group w-auto p-4" (submit)="search()">
-          <input type="search" class="form-control" placeholder="Your Team" aria-label="Search"/>
-          <button class="btn btn-outline-dark" type="submit">Search</button>
+          <input type="search" class="form-control custom-search" placeholder="Your Team" aria-label="Search"/>
+          <button class="btn btn-dark" type="submit">Search</button>
         </form>
       </div>
+      
 
       <div class="container-fluid p-0">
         <nav class="navbar navbar-expand-lg navbar-light ">
@@ -20,10 +21,12 @@
             <ul class="navbar-nav mt-3">
               <li class="nav-item">
                 <span class="m-3">
-                  <mat-icon>person</mat-icon>
+                  <a routerLink="/login">
+                    <mat-icon class="black-icon">person</mat-icon>
+                  </a>
                 </span>
-              </li>
-              <li class="nav-item">
+               </li>
+               <li class="nav-item">
                 <span class="m-3">
                   <mat-icon>favorite</mat-icon>
                 </span>
@@ -40,7 +43,7 @@
     
     </header>
     <div class="col-md-12">
-      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
           <button
             class="navbar-toggler"

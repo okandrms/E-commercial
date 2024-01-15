@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { SlickCarouselModule } from 'ngx-slick-carousel';
+import { RouterModule } from '@angular/router';
+
 
 
 
@@ -10,7 +12,7 @@ import { SlickCarouselModule } from 'ngx-slick-carousel';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, MatIconModule, SlickCarouselModule],
+  imports: [CommonModule, RouterOutlet, MatIconModule, SlickCarouselModule, RouterModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
