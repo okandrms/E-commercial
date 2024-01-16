@@ -6,6 +6,8 @@ import { PremierleagueComponent } from './premierleague/premierleague.component'
 import { BundesligaComponent } from './bundesliga/bundesliga.component';
 import { SerieaComponent } from './seriea/seriea.component';
 import { Euro2024Component } from './euro2024/euro2024.component';
+import { ShoppingcartComponent } from './shoppingcart/shoppingcart.component';
+import { FavoriteComponent } from './favorite/favorite.component';
 
 
 
@@ -44,6 +46,14 @@ export const routes: Routes = [
         {
         path: 'euro2024',
         component: Euro2024Component
+        },
+        {
+        path: 'shoppingcart',
+        component: ShoppingcartComponent
+        },
+        {
+        path: 'favorite',
+        component: FavoriteComponent
         }
 
     
