@@ -13,7 +13,7 @@ namespace App\Services;
 
         private function transformToDTO($product)
     {
-        return new ProductDTO($product->productName, $product->description, $product->id, $product->size, $product->price, $product->kitsType, $product->imageList, $product->team_id, $product->timestamps);
+        return new ProductDTO($product->productName, $product->id, $product->price, $product->kitsType, $product->imageList, $product->team_id, $product->timestamps);
     }
 
     private function transformToDTOs($products)

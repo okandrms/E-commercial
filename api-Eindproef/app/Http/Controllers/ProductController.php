@@ -25,8 +25,6 @@ class ProductController extends Controller
     {
         $this->validate($request, [
             'productName' => 'required|string',
-            'description' => 'required|string',
-            'size' => 'required|string',
             'price' => 'required|numeric',
             'kitsType' => 'required|string',
             'imageList' => 'required|array',
@@ -37,9 +35,7 @@ class ProductController extends Controller
 
         $productDTO = new ProductDTO(
             $request->input('productName'),
-            $request->input('description'),
             $request->input('id'), // Assuming 'id' is present in the request
-            $request->input('size'),
             $request->input('price'),
             $request->input('kitsType'),
             $request->input('imageList'),
@@ -62,8 +58,6 @@ class ProductController extends Controller
     {
         $this->validate($request, [
             'productName' => 'required|string',
-            'description' => 'required|text',
-            'size' => 'required|string',
             'price' => 'required|float',
             'kitsType' => 'required|string',
             'imageList' => 'required|text',
@@ -74,9 +68,7 @@ class ProductController extends Controller
 
         $productDTO = new ProductDTO(
             $request->input('productName'),
-            $request->input('description'),
             $request->input('id'), // Assuming 'id' is present in the request
-            $request->input('size'),
             $request->input('price'),
             $request->input('kitsType'),
             $request->input('imageList'),
