@@ -39,8 +39,6 @@ use Illuminate\Support\Facades\DB;
     Route::post('/products', function (Request $request) {
         $data = $request->validate([
             'productName' => 'required|string',
-            'description' => 'required|string',
-            'size' => 'required|string',
             'price' => 'required|numeric',
             'kitsType' => 'required|string',
             'imageList' => 'required|array',
@@ -59,8 +57,6 @@ use Illuminate\Support\Facades\DB;
     Route::put('/products/{id}', function (Request $request, $id) {
         $data = $request->validate([
             'productName' => 'string',
-            'description' => 'string',
-            'size' => 'string',
             'price' => 'numeric',
             'kitsType' => 'string',
             'imageList' => 'array',
@@ -82,7 +78,10 @@ use Illuminate\Support\Facades\DB;
         return response()->json(['message' => 'Product deleted successfully']);
     });
 
-
+    Route::get('/products/{category}', function ($category) {
+      
+        return DB::select("SELECT * FROM products p inner join teams t on p.team_id = t.id  WHERE t.category = ?", [$category]);
+    });
     // for stock 
 
     // GET Method
@@ -129,3 +128,4 @@ Route::delete('/stocks/{id}', function ($id) {
 
     return response()->json(['message' => 'Stock deleted successfully']);
 });
+
