@@ -82,6 +82,15 @@ use Illuminate\Support\Facades\DB;
       
         return DB::select("SELECT * FROM products p inner join teams t on p.team_id = t.id  WHERE t.category = ?", [$category]);
     });
+
+    Route::get('/products/search/{term}', function ($term) {
+        return DB::select(" SELECT * FROM products p INNER JOIN teams t ON p.team_id = t.id  WHERE t.category LIKE ? OR t.teamName LIKE ? OR p.productName LIKE ?
+        ", ["%$term%", "%$term%", "%$term%"]);
+    });
+    
+
+
+    
     // for stock 
 
     // GET Method
