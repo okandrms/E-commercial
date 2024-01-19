@@ -5,6 +5,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { SlickCarouselModule } from 'ngx-slick-carousel';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 
 
@@ -14,18 +16,25 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, MatIconModule, SlickCarouselModule, RouterModule, FontAwesomeModule],
+  imports: [CommonModule, RouterOutlet, MatIconModule, SlickCarouselModule, RouterModule, FontAwesomeModule, FormsModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 export class AppComponent {
   title = 'Eindproef';
-  searchText: string = "";
+  term: any ;
   
 
-search() {
-  // perform the search here
-  console.log(this.searchText);
-}
+
+
+constructor(private router: Router) {}
+
+  redirectToSearch() {
+    console.log(this.term);
+    this.router.navigate(['/search', this.term]);
+    
+  }
+
+  
 
 }
