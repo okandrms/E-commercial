@@ -27,17 +27,19 @@ constructor(private formBuilder: FormBuilder, private router: Router) {
   
 }
 onLogin() {
+  console.log(this.loginObj.loginForm.controls['username'].value);
+  console.log(this.loginObj.loginForm.controls['password'].value);
   
-  if(this.loginObj.username.toLowerCase() == "admin" && this.loginObj.password.toLowerCase() == "3344") {
-    this.router.navigateByUrl('/home');
+  if(this.loginObj.loginForm.controls['username'].value.toLowerCase() == "admin" && 
+       this.loginObj.loginForm.controls['password'].value.toLowerCase() == "3344") {
+      this.router.navigateByUrl('/home');
   } else{
-    alert("Wrong username or password")
+      alert("Wrong username or password")
+  }
   }
 }
 
 
-
- }
 
 
   
