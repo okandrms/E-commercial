@@ -20,6 +20,8 @@ import { Subscription } from 'rxjs';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
+
+
 export class AppComponent implements OnInit {
   title = 'Eindproef';
   term: any ;
@@ -41,10 +43,21 @@ constructor(private router: Router,private localStorageService: LocalStorageServ
     this.subscription = this.localStorageService.localStorage$.subscribe(value => { 
     console.log("APP Component Init", value); 
     let products = value ? JSON.parse(value??"") : this.localStorageService.getLocalStorageValue('cart'); 
-    this.localStorageValue  = products ? products.length : 0;
+    this.localStorageValue  = products ?  this.calculateTotalQuantity(products) : 0; 
+
+    // products ? products.length : 0;
     
   });
   }
+
+  calculateTotalQuantity(products: any[]) {
+    let totalQuantity = 0;
+    products.forEach(product => {
+      totalQuantity += product.quantity;
+    });
+    return totalQuantity;
+  }
+ 
 
 
 }
