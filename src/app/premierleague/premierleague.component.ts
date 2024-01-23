@@ -3,6 +3,8 @@ import { ProductService } from '../apiservice.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { LocalStorageService } from '../local-storage.service';
+
 
 @Component({
   selector: 'app-premierleague',
@@ -13,8 +15,10 @@ import { RouterModule } from '@angular/router';
 })
 export class PremierleagueComponent implements OnInit {
  products: any[] =[];
+ selectedSize: any[] = [];
  
-  constructor(private productService: ProductService) { 
+ 
+  constructor(private productService: ProductService,private localStorageService: LocalStorageService) { 
    
   }
  
@@ -35,5 +39,28 @@ export class PremierleagueComponent implements OnInit {
 
     })
     console.log(this.products);
+    
   }
+
+  addToCart(size: string, product: any) {
+    if (!size) {
+        
+        alert ("Select a size");
+        return; // End transaction if customer did not select a size
+    }
+
+    console.log(`Selected Size: ${size}`);
+    product.size = size;
+    
+    let products = this.localStorageService.getLocalStorageValue('cart');
+    console.log(products);
+
+    let cartProducts = products ?? [];
+    cartProducts.push(product);
+    
+    this.localStorageService.setLocalStorageValue('cart', cartProducts);
+}
+
+  
+  
  }
