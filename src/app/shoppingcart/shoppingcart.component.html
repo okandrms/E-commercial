@@ -35,34 +35,32 @@
                 <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
                   <!-- Quantity -->
                   <div class="d-flex mb-4" style="max-width: 300px">
-                    <button class="btn btn-danger m-3"
-                      onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
+                    <button class="btn btn-danger m-3" (click)="decreaseQuantity(product)">
                       <i class="">-</i>
                     </button>
-  
+                
                     <div class="form-outline mb-1">
-                      <input id="form1" min="0" name="quantity" value="1" type="number" class="form-control " />
+                      <input [(ngModel)]="product.quantity"  min="1" name="quantity" disabled  class="form-control" />
+
                       <label class="form-label" for="form1">Quantity</label>
                     </div>
-  
-                    <button class="btn btn-primary m-3"
-                      onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
+                    
+                
+                    <button class="btn btn-primary m-3" (click)="increaseQuantity(product)">
                       <i class="">+</i>
                     </button>
                   </div>
                   <!-- Quantity -->
-  
+                
                   <!-- Price -->
                   <p class="text-start text-md-center">
-                    <strong>{{  '€ ' + product.price }}</strong>
-                    <button type="button" class="btn m-3"
-                     (click)="removeFromCart(product.id)">
-                    <mat-icon class="mr-2">delete</mat-icon>
-                  </button>
+                    <strong>{{ '€ ' + product.price }}</strong>
+                    <button type="button" class="btn m-3" (click)="removeFromCart(product.id)">
+                      <mat-icon class="mr-2">delete</mat-icon>
+                    </button>
                   </p>
-                  
-
                 </div>
+                
                 
               </div>
 
