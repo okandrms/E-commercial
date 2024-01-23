@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
@@ -7,8 +7,8 @@ import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-
-
+import { LocalStorageService } from './local-storage.service';
+import { Subscription } from 'rxjs';
 
 
 
@@ -20,14 +20,13 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'Eindproef';
   term: any ;
-  
+  localStorageValue : number = 0; 
+  private subscription: Subscription = new Subscription();
 
-
-
-constructor(private router: Router) {}
+constructor(private router: Router,private localStorageService: LocalStorageService) {}
 
   redirectToSearch() {
     console.log(this.term);
@@ -36,5 +35,16 @@ constructor(private router: Router) {}
   }
 
   
+  
+  ngOnInit() {
+   
+    this.subscription = this.localStorageService.localStorage$.subscribe(value => { 
+    console.log("APP Component Init", value); 
+    let products = value ? JSON.parse(value??"") : this.localStorageService.getLocalStorageValue('cart'); 
+    this.localStorageValue  = products ? products.length : 0;
+    
+  });
+  }
+
 
 }
