@@ -6,6 +6,7 @@ import { RouterModule } from '@angular/router';
 import { LocalStorageService } from '../local-storage.service';
 import { ToastrService } from 'ngx-toastr';
 
+
 @Component({
   selector: 'app-buynow',
   standalone: true,
@@ -43,11 +44,7 @@ export class BuynowComponent implements OnInit {
         this.toaster.error("Select a size");
         return; // End transaction if the customer did not select a size
     }
-
     this.toaster.success(`${product.productName} added to cart`);
-
-    // Further logic for adding the product to the cart can go here
-
 
     console.log(`Selected Size: ${size}`);
     product.size = size;
