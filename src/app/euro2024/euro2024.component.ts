@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { ProductService } from '../apiservice.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { LocalStorageService } from '../local-storage.service';
+import { ToastrService } from 'ngx-toastr';
 
 
 @Component({
@@ -13,21 +14,23 @@ import { LocalStorageService } from '../local-storage.service';
   templateUrl: './euro2024.component.html',
   styleUrl: './euro2024.component.css'
 })
+
 export class Euro2024Component implements OnInit {
   products: any[] =[];
- selectedSize: any[] = [];
- 
- 
+  selectedSize: any[] = [];
+  toaster: any;
+  
+  
   constructor(private productService: ProductService,private localStorageService: LocalStorageService) { 
-   
+    this.toaster = inject(ToastrService);
   }
- 
+  
   async ngOnInit() {
- 
+  
     this.products = await this.productService.getProducts("Euro2024");
-   
+    
     this.products.forEach(product => {
-       
+        
       let images : string[] = product.imageList ? JSON.parse(product.imageList) : []; 
       let is : string[] = [];
       images.forEach((i: string) => {
@@ -39,15 +42,17 @@ export class Euro2024Component implements OnInit {
 
     })
     console.log(this.products);
+    
   }
 
   addToCart(size: string, product: any) {
     if (!size) {
-      alert ("Select a size");
+        this.toaster.error("Select a size");
         return; // End transaction if customer did not select a size
     }
+    this.toaster.success(`${product.productName} added to cart`);
 
-    console.log(`Selected Size : ${size}`);
+    console.log(`Selected Size: ${size}`);
     product.size = size;
     
     let products = this.localStorageService.getLocalStorageValue('cart');

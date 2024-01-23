@@ -34,9 +34,9 @@ onLogin() {
   console.log(this.loginObj.loginForm.controls['password'].value);
   
   if(this.loginObj.loginForm.controls['username'].value.toLowerCase() == "admin" && 
-       this.loginObj.loginForm.controls['password'].value.toLowerCase() == "3344") {
-      this.router.navigateByUrl('/home');
+      this.loginObj.loginForm.controls['password'].value.toLowerCase() == "3344") {
       this.toaster.success("Login successfull");
+      this.router.navigateByUrl('/home');
   } else{
       this.toaster.error("Wrong username or password")
   }

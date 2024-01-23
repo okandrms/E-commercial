@@ -28,6 +28,7 @@
                             </div>
                             
                         </div>
+
                         <select class="text-center w-25 h-25 mb-2 mx-auto" [(ngModel)]="selectedSize[i]" id="size" name="size">
                             <option value="" disabled selected> Size</option>
                             <option value="XS">XS</option>
@@ -43,9 +44,10 @@
                            
                         
                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" (click)="addToCart(selectedSize[i], product)" >Add to Card</a></div>
+                            <div class="text-center"><a class="btn btn-dark mt-auto" (click)="addToCart(selectedSize[i], product)" >Add to Cart</a></div>
                            </div>
                            
+
                     </div>
                 </div> }      
              

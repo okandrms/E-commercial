@@ -1,3 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik+Doodle+Shadow&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Text&display=swap');
+
 .custom-bg {
     background-color: rgb(219, 38, 38);
+}
+.buynow {
+    font-family: hknova medium,sans-serif!important;
+    letter-spacing: 0;
 }

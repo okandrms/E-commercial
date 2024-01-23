@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { ProductService } from '../apiservice.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { LocalStorageService } from '../local-storage.service';
+import { ToastrService } from 'ngx-toastr';
 
 
 @Component({
@@ -16,10 +17,11 @@ import { LocalStorageService } from '../local-storage.service';
 export class PremierleagueComponent implements OnInit {
  products: any[] =[];
  selectedSize: any[] = [];
+ toaster: any;
  
  
   constructor(private productService: ProductService,private localStorageService: LocalStorageService) { 
-   
+   this.toaster = inject(ToastrService);
   }
  
   async ngOnInit() {
@@ -44,10 +46,10 @@ export class PremierleagueComponent implements OnInit {
 
   addToCart(size: string, product: any) {
     if (!size) {
-        
-        alert ("Select a size");
+        this.toaster.error("Select a size");
         return; // End transaction if customer did not select a size
     }
+    this.toaster.success(`${product.productName} added to cart`);
 
     console.log(`Selected Size: ${size}`);
     product.size = size;
