@@ -61,9 +61,12 @@ export class ShoppingcartComponent implements OnInit {
     this.localStorageService.setLocalStorageValue('cart', this.products);
     this.localStorageValue  = this.products ? this.products.length : 0;
     this.calculateTotalAmount();
+    if (this.products.length == 0) {
+      this.totalAmount = 0;
+    }
   }
   orderNow() {
-    if (this.products.length == 0) {
+    if (this.calculateTotalQuantity(this.products) == 0) {
       this.toaster.error("Cart is empty");
       return;
     }
@@ -84,13 +87,26 @@ export class ShoppingcartComponent implements OnInit {
 
   }
   
-  decreaseQuantity(product: { quantity: number }) {
+  decreaseQuantity(product: {
+    id(id: any): unknown; quantity: number 
+}) {
     if (product.quantity > 0) {
       product.quantity -= 1;
       this.calculateTotalAmount();
       this.localStorageValue = this.calculateTotalQuantity(this.products); // Update local storage value, So Total products are displayed at total products.
     }
-  }
+    if (product.quantity == 0) {
+      this.removeFromCart(product.id);
+    }
+    }
+    
+    
+
+
+
+
+    
+    
 
   
   }

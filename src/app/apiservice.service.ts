@@ -12,7 +12,7 @@ export class ProductService {
 
 
  async getProducts(category: string) {
-  return (await fetch(this.apiUrl+category)).json();  
+  return (await fetch(this.apiUrl+category)).json(); 
 }
 
 private apiSearch = 'http://127.0.0.1:8000/api/products/search/';

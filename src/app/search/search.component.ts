@@ -18,6 +18,9 @@ import { ActivatedRoute } from '@angular/router';
 export class SearchComponent implements OnInit {
   products: any[] =[];
   term: string= "";
+  toaster: any;
+  localStorageService: any;
+selectedSize: any;
   
    constructor(private productService: ProductService, private route: ActivatedRoute) { 
     
@@ -47,7 +50,7 @@ export class SearchComponent implements OnInit {
      })
      console.log(this.products);
    }
-
-
-  }
+  
+}
+  
 
