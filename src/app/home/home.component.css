@@ -8,3 +8,6 @@
     font-family: hknova medium,sans-serif!important;
     letter-spacing: 0;
 }
+.row-cols-1 .card-img-top:hover {
+    cursor: pointer;
+}
