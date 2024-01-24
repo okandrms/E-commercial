@@ -32,6 +32,8 @@ export class ShoppingcartComponent implements OnInit {
    this.calculateTotalAmount();
   this.localStorageValue  = this.products ?  this.calculateTotalQuantity(this.products) : 0;
   
+  
+  
   }
 
   calculateTotalQuantity(products: any[]) {
@@ -70,17 +72,22 @@ export class ShoppingcartComponent implements OnInit {
    this.router.navigateByUrl('/home');
    this.localStorageService.setLocalStorageValue('cart', []);
     
-  } , 3000);  
+  } , 3000);
+}  
 
   increaseQuantity(product: { quantity: number }) {
     product.quantity = (product.quantity || 0) + 1;
     this.calculateTotalAmount();
+    this.localStorageValue = this.calculateTotalQuantity(this.products);
+    
+
   }
   
   decreaseQuantity(product: { quantity: number }) {
     if (product.quantity > 0) {
       product.quantity -= 1;
       this.calculateTotalAmount();
+      this.localStorageValue = this.calculateTotalQuantity(this.products);
     }
   }
 
