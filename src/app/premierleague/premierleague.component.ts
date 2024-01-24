@@ -58,7 +58,14 @@ export class PremierleagueComponent implements OnInit {
     console.log(products);
 
     let cartProducts = products ?? [];
-    cartProducts.push(product);
+    let cartProductFind = cartProducts.find((p: any)=> p.id == product.id && p.size == size);
+    if (cartProductFind) {
+      cartProductFind.quantity = cartProductFind.quantity + 1;
+    } else {
+      product.quantity = 1;
+      cartProducts.push(product);
+    }
+
     
     this.localStorageService.setLocalStorageValue('cart', cartProducts);
 }

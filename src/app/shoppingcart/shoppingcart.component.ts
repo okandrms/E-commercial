@@ -2,8 +2,10 @@ import { Component, OnInit, inject } from '@angular/core';
 import { Subject } from 'rxjs';
 import { LocalStorageService } from '../local-storage.service';
 import { MatIconModule } from '@angular/material/icon';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+
 
 
 @Component({
@@ -11,7 +13,7 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './shoppingcart.component.html',
   styleUrls: ['./shoppingcart.component.css'],
   standalone: true,
-  imports: [MatIconModule,],
+  imports: [MatIconModule, FormsModule]
 })
 export class ShoppingcartComponent implements OnInit {
   products: any[] = [];
@@ -28,16 +30,26 @@ export class ShoppingcartComponent implements OnInit {
   ngOnInit() {
    this.products = this.localStorageService.getLocalStorageValue('cart'); 
    this.calculateTotalAmount();
-  this.localStorageValue  = this.products ? this.products.length : 0;
-
-
-
+  this.localStorageValue  = this.products ?  this.calculateTotalQuantity(this.products) : 0;
+  
   }
 
-  calculateTotalAmount() {
-    this.totalAmount = 0;
+  calculateTotalQuantity(products: any[]) {
+    let totalQuantity = 0;
+    products.forEach(product => {
+      totalQuantity += product.quantity;
+    });
+    return totalQuantity;
+  }
+
+  calculateTotalAmount():void {
+    let tempTotalAmount = 0;
     this.products.forEach(product => {
-      this.totalAmount += product.price;
+    tempTotalAmount += product.price * product.quantity;
+    this.totalAmount = parseFloat(tempTotalAmount.toFixed(2)); 
+
+
+
     });
   }
   removeFromCart(productId: any) {
@@ -60,5 +72,24 @@ export class ShoppingcartComponent implements OnInit {
     
   } , 3000);  
 
+  increaseQuantity(product: { quantity: number }) {
+    product.quantity = (product.quantity || 0) + 1;
+    this.calculateTotalAmount();
+  }
+  
+  decreaseQuantity(product: { quantity: number }) {
+    if (product.quantity > 0) {
+      product.quantity -= 1;
+      this.calculateTotalAmount();
+    }
+  }
 
-  }}
+  
+  }
+  
+  
+  
+  
+
+  
+
