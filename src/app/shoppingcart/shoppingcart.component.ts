@@ -40,6 +40,7 @@ export class ShoppingcartComponent implements OnInit {
     let totalQuantity = 0;
     products.forEach(product => {
       totalQuantity += product.quantity;
+      this.localStorageService.setLocalStorageValue('cart', products); // Update local storage value, So Total products are displayed in cart.
     });
     return totalQuantity;
   }
@@ -78,7 +79,7 @@ export class ShoppingcartComponent implements OnInit {
   increaseQuantity(product: { quantity: number }) {
     product.quantity = (product.quantity || 0) + 1;
     this.calculateTotalAmount();
-    this.localStorageValue = this.calculateTotalQuantity(this.products);
+    this.localStorageValue = this.calculateTotalQuantity(this.products); // Update local storage value, So Total products are displayed at total products.
     
 
   }
@@ -87,7 +88,7 @@ export class ShoppingcartComponent implements OnInit {
     if (product.quantity > 0) {
       product.quantity -= 1;
       this.calculateTotalAmount();
-      this.localStorageValue = this.calculateTotalQuantity(this.products);
+      this.localStorageValue = this.calculateTotalQuantity(this.products); // Update local storage value, So Total products are displayed at total products.
     }
   }
 
