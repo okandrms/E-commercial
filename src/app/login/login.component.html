@@ -10,42 +10,42 @@
       <h2>Login</h2>
       <hr>
       
-      <div class="form-group" [formGroup]="loginObj.loginForm" >
+      <div class="form-group" >
         <label for="exampleInputEmail1">Email address</label>
-        <input type="email" formControlName="username" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+        <input type="email" [(ngModel)]="lgn.email"  class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
        </div>
-       <div class="form-group" [formGroup]="loginObj.loginForm">
+       <div class="form-group" >
         <label for="exampleInputPassword1">Password</label>
-        <input type="password" formControlName="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+        <input type="password"[(ngModel)]="lgn.password" class="form-control" id="exampleInputPassword1" placeholder="Password">
        </div>
     
-        <button type="button" (click)="onLogin()" class="btn btn-danger mt-3">Login</button> 
+        <button type="button" (click)="login()" class="btn btn-danger mt-3">Login</button> 
         <a href="" class="btn btn-link mt-3">Forgot password?</a>
       
     </div>
 		<div class="col col-md-6">
       <h2>Create Account</h2>
       <hr>
-      <form>
+      <div>
         <div class="form-group">
           <label for="fname">First name</label>
-          <input type="text" class="form-control" id="fname" placeholder="First name">
+          <input type="text" class="form-control" [(ngModel)]="account.name" id="fname" placeholder="First name">
         </div>
         <div class="form-group">
           <label for="lname">Last name</label>
-          <input type="text" class="form-control" id="lname" placeholder="Last name">
+          <input type="text" class="form-control"  [(ngModel)]="account.surname" id="lname" placeholder="Last name">
         </div>
         <div class="form-group">
           <label for="email2">Email address</label>
-          <input type="email" class="form-control" id="email2" aria-describedby="emailHelp" placeholder="Enter email">
+          <input type="email" class="form-control"  [(ngModel)]="account.email" id="email2" aria-describedby="emailHelp" placeholder="Enter email">
         </div>
         <div class="form-group">
           <label for="pwd2">Password</label>
-          <input type="password" class="form-control" id="pwd2" placeholder="Password">
+          <input type="password" class="form-control" [(ngModel)]="account.password" id="pwd2" placeholder="Password">
         </div>
         
-        <button type="button" class="btn btn-danger mt-3">Create Account</button>
-      </form>
+        <button type="button" (click)="createAccount()" class="btn btn-danger mt-3">Create Account</button>
+      </div>
     </div>
 	</div>
   

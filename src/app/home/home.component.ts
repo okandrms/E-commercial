@@ -16,7 +16,16 @@
   
     buyNow() {
        this.router.navigateByUrl('/buynow');
-      } 
+      }
+    GoToItaly() {
+      this.router.navigateByUrl('/search/Italy');
+    }
+    GoToBelgium() {
+      this.router.navigateByUrl('/search/Belgium');
+    }
+    GoToEngland() {
+      this.router.navigateByUrl('/search/England');
+    }
       }
 
 
