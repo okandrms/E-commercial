@@ -27,6 +27,7 @@ export class AppComponent implements OnInit {
   title = 'Eindproef';
   term: any ;
   localStorageValue : number = 0; 
+  localStorageValueFavorite : number = 0;
   private subscription: Subscription = new Subscription();
 
   // Constructor with dependency injection
@@ -42,11 +43,13 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     // Subscribe to changes in the localStorage
     this.subscription = this.localStorageService.localStorage$.subscribe(value => { 
+
       console.log("APP Component Init", value); 
       // Parse the JSON value and calculate the total quantity
       let products = value ? JSON.parse(value??"") : this.localStorageService.getLocalStorageValue('cart'); 
       this.localStorageValue  = products ?  this.calculateTotalQuantity(products) : 0; 
     });
+
   }
 
   // Method to calculate the total quantity of products

@@ -27,16 +27,30 @@
                                 </div>
                             </div>
 
-                            <!-- Size selection dropdown -->
-                            <select class="text-center w-25 h-25 mb-2 mx-auto" [(ngModel)]="selectedSize[i]" id="size" name="size">
-                                <option value="" disabled selected> Size</option>
-                                <option value="XS">XS</option>
-                                <option value="S">S</option>
-                                <option value="M">M</option>
-                                <option value="L">L</option>
-                                <option value="XL">XL</option>
-                                <option value="XXL">XXL</option>
-                            </select>
+
+                        <select class="text-center w-25 h-25 mb-2 mx-auto" [(ngModel)]="selectedSize[i]" id="size" name="size">
+                           
+                            <option value="" disabled selected> Size</option>
+                            <option value="XS">XS</option>
+                            <option value="S">S</option>
+                            <option value="M">M</option>
+                            <option value="L">L</option>
+                            <option value="XL">XL</option>
+                            <option value="XXL">XXL</option>
+                          
+                           </select>
+                          
+                           
+                           <div class="m-3 text-center">
+                            
+                            
+                            <mat-icon (click)="addToFavorites(selectedSize[i], product)"  class="black-icon text-black">favorite</mat-icon>
+                            
+                           </div>  
+                        <div class="card-footer p-4 pt-0 border-top-0 ">
+                        <div class="text-center"><a class="btn btn-dark mt-auto" (click)="addToCart(selectedSize[i], product)" >Add to Cart</a></div>
+                        </div>
+                           
 
                             <!-- Add to Cart button -->
                             <div class="card-footer p-4 pt-0 border-top-0 ">

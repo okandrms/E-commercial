@@ -6,12 +6,13 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { LocalStorageService } from '../local-storage.service';
 import { ToastrService } from 'ngx-toastr';
+import { MatIconModule } from '@angular/material/icon';
 
 // Component decorator with metadata
 @Component({
   selector: 'app-premierleague',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, MatIconModule],
   templateUrl: './premierleague.component.html',
   styleUrl: './premierleague.component.css'
 })
@@ -72,3 +73,33 @@ export class PremierleagueComponent implements OnInit {
     this.localStorageService.setLocalStorageValue('cart', cartProducts);
   }
 }
+
+addToFavorites(size: string, product: any) {
+  if (!size) {
+      this.toaster.error("Select a size");
+      return; // End transaction if customer did not select a size
+  }
+  this.toaster.success(`${product.productName} added to favorites`);
+
+  console.log(`Selected Size: ${size}`);
+  product.size = size;
+  
+  let favProducts = this.localStorageService.getLocalStorageValue('favorites');
+  console.log(favProducts);
+
+  let favoriteProducts = favProducts ?? [];
+  let favoriteProductFind = favoriteProducts.find((p: any)=> p.id == product.id && p.size == size);
+  if (favoriteProductFind) {
+    favoriteProductFind.quantity = favoriteProductFind.quantity + 1;
+  } else {
+    product.quantity = 1;
+    favoriteProducts.push(product);
+  }
+
+  
+  this.localStorageService.setLocalStorageValue('favorites', favoriteProducts);
+}
+  
+  
+ }
+
