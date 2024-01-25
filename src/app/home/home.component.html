@@ -1,15 +1,21 @@
+<!-- Main card with row layout -->
 <div class="card mb-3" style="max-width: 1340px">
   <div class="row g-0">
+    <!-- Left column for carousel component -->
     <div class="col-md-8">
       <app-carousel></app-carousel>
     </div>
 
+    <!-- Right column with custom background -->
     <div class="col-md-4 custom-bg">
       <div class="card-body text-white">
+        <!-- Logo image -->
         <p><img class="logo img-fluid" src="assets/images/Logo2.png" alt=""></p>
         
-          <h2 class="buynow">Click on 'buy now' to browse all of your favorite football shirts</h2>
+        <!-- Headline and buy now button -->
+        <h2 class="buynow">Click on 'buy now' to browse all of your favorite football shirts</h2>
         
+        <!-- Button for 'Buy Now' action -->
         <p class="card-text">
           <button type="button" class="btn btn-dark mt-3" (click)="buyNow()">Buy now</button>
         </p>
@@ -18,50 +24,45 @@
   </div>
 </div>
 
+<!-- Grid layout for displaying football shirts -->
 <div class="row row-cols-1 row-cols-md-3 g-4">
+  <!-- Italy card -->
   <div class="col">
     <div class="card h-100" (click)="GoToItaly()">
-      <img 
-        src="/assets/images/3.jpg" 
-        class="card-img-top"
-        alt="Italy"
-      />
+      <img src="/assets/images/3.jpg" class="card-img-top" alt="Italy" />
       <div class="card-body bg-dark">
         <h5 class="card-title"><strong class="text-white">Italy home shirt</strong></h5>
-        <p class="card-text" class="text-white">
+        <p class="card-text text-white">
           Elevate your support for the Azzurri with the official Italy Home Kit. Designed with passion and precision, this iconic jersey pays homage to Italy's rich football history while embracing modern style.
         </p>
       </div>
     </div>
   </div>
+
+  <!-- Belgium card -->
   <div class="col">
     <div class="card h-100" (click)="GoToBelgium()">
-      <img 
-        src="/assets/images/Belgium1.jpg"
-        class="card-img-top"
-        alt="Turkey"
-      />
+      <img src="/assets/images/Belgium1.jpg" class="card-img-top" alt="Belgium" />
       <div class="card-body bg-dark">
         <h5 class="card-title"><strong class="text-white">Belgium home shirt</strong></h5>
-        <p class="card-text" class="text-white">
+        <p class="card-text text-white">
           Dress in the colors of Red Devils pride with the official Belgium National Home Kit. Immerse yourself in the spirit of Belgian football with this meticulously crafted jersey, blending tradition with contemporary design.
         </p>
       </div>
     </div>
   </div>
+
+  <!-- England card -->
   <div class="col">
     <div class="card h-100" (click)="GoToEngland()">
-      <img
-        src="/assets/images/Eng.jpg"
-        class="card-img-top"
-        alt="BorussiaDortmund"
-      />
+      <img src="/assets/images/Eng.jpg" class="card-img-top" alt="England" />
       <div class="card-body bg-dark">
         <h5 class="card-title"><strong class="text-white">England home shirt</strong></h5>
-        <p class="card-text" class="text-white">
+        <p class="card-text text-white">
           Celebrate the Three Lions in style with the official England National Team Home Kit. Imbued with history and modern flair, this iconic jersey pays homage to England's football heritage while embracing contemporary design.
         </p>
       </div>
     </div>
   </div>
 </div>
+

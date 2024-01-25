@@ -1,113 +1,107 @@
 <section class="h-100 gradient-custom">
-    <div class="container py-5">
-      <div class="row d-flex justify-content-center my-4">
-        <div class="col-md-8">
-          <div class="card mb-4">
-            <div class="card-header py-3">
-              <strong class="mb-0">{{ 'Total Products : ' + localStorageValue}}</strong>
-            </div>
-            <div class="card-body">
-
-              <!-- Single item -->
-              @for(product of products; track product.id; let i = $index) {
-              <div class="row">
-                <div class="col-lg-3 col-md-12 mb-4 mb-lg-0">
-                  <!-- Image -->
-                  <div class="bg-image hover-overlay hover-zoom ripple rounded" data-mdb-ripple-color="light">
-                    <img src={{product.images[0]}}
-                      class="w-100" alt="Blue Jeans Jacket" />
-                    <a href="#!">
-                      <div class="mask" style="background-color: rgba(251, 251, 251, 0.2)"></div>
-                    </a>
-                  </div>
-                  <!-- Image -->
+  <div class="container py-5">
+    <div class="row d-flex justify-content-center my-4">
+      <div class="col-md-8">
+        <div class="card mb-4">
+          <div class="card-header py-3">
+            <!-- Display total products from local storage -->
+            <strong class="mb-0">{{ 'Total Products : ' + localStorageValue}}</strong>
+          </div>
+          <div class="card-body">
+            <!-- Iterate through each product -->
+            @for(product of products; track product.id; let i = $index) {
+            <div class="row">
+              <div class="col-lg-3 col-md-12 mb-4 mb-lg-0">
+                <!-- Product Image -->
+                <div class="bg-image hover-overlay hover-zoom ripple rounded" data-mdb-ripple-color="light">
+                  <img src={{product.images[0]}} class="w-100" alt="Blue Jeans Jacket" />
+                  <a href="#!">
+                    <div class="mask" style="background-color: rgba(251, 251, 251, 0.2)"></div>
+                  </a>
                 </div>
-  
-                <div class="col-lg-5 col-md-6 mb-4 mb-lg-0">
-                  <!-- Data -->
-                  <p><strong>{{ product.productName }}</strong></p>
-                 
-                  <p>{{ 'Size : ' +  product.size }}</p>
-                  
-                  <!-- Data -->
-                </div>
-  
-                <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
-                  <!-- Quantity -->
-                  <div class="d-flex mb-4" style="max-width: 300px">
-                    <button class="btn btn-danger m-3" (click)="decreaseQuantity(product)">
-                      <i class="">-</i>
-                    </button>
-                
-                    <div class="form-outline mb-1">
-                      <input [(ngModel)]="product.quantity"  min="1" name="quantity" disabled  class="form-control" />
-
-                      <label class="form-label" for="form1">Quantity</label>
-                    </div>
-                    
-                
-                    <button class="btn btn-primary m-3" (click)="increaseQuantity(product)">
-                      <i class="">+</i>
-                    </button>
-                  </div>
-                  <!-- Quantity -->
-                
-                  <!-- Price -->
-                  <p class="text-start text-md-center">
-                    <strong>{{ '€ ' + product.price }}</strong>
-                    <button type="button" class="btn m-3" (click)="removeFromCart(product.id)">
-                      <mat-icon class="mr-2">delete</mat-icon>
-                    </button>
-                  </p>
-                </div>
-                
-                
+                <!-- Product Image -->
               </div>
 
-              <hr class="my-4" />
-            }
-            
-             
+              <div class="col-lg-5 col-md-6 mb-4 mb-lg-0">
+                <!-- Product Data -->
+                <p><strong>{{ product.productName }}</strong></p>
+                <p>{{ 'Size : ' +  product.size }}</p>
+                <!-- Product Data -->
+              </div>
+
+              <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
+                <!-- Product Quantity and Price -->
+                <div class="d-flex mb-4" style="max-width: 300px">
+                  <!-- Decrease Quantity Button -->
+                  <button class="btn btn-danger m-3" (click)="decreaseQuantity(product)">
+                    <i class="">-</i>
+                  </button>
+                  <!-- Quantity Input -->
+                  <div class="form-outline mb-1">
+                    <input [(ngModel)]="product.quantity"  min="1" name="quantity" disabled  class="form-control" />
+                    <label class="form-label" for="form1">Quantity</label>
+                  </div>
+                  <!-- Increase Quantity Button -->
+                  <button class="btn btn-primary m-3" (click)="increaseQuantity(product)">
+                    <i class="">+</i>
+                  </button>
+                </div>
+                <!-- Product Price and Remove Button -->
+                <p class="text-start text-md-center">
+                  <strong>{{ '€ ' + product.price }}</strong>
+                  <button type="button" class="btn m-3" (click)="removeFromCart(product.id)">
+                    <mat-icon class="mr-2">delete</mat-icon>
+                  </button>
+                </p>
+              </div>
             </div>
+            <!-- Horizontal Rule -->
+            <hr class="my-4" />
+            } <!-- End @For loop -->
           </div>
         </div>
-        <div class="col-md-4">
-          <div class="card mb-4">
-            <div class="card-header py-3">
-              <strong class="mb-0">Summary</strong>
-            </div>
-            <div class="card-body">
-              <ul class="list-group list-group-flush">
-                
-                  <h4 class="mb-0">{{ 'Total Products: ' + localStorageValue}}</h4>
-                
-                <li
-                  class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
-                  Price of the products:
-                  <span>{{  '€ ' + totalAmount }}</span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-                  Shipping:
-                  <span>Free</span>
-                </li>
-                <li
-                  class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
-                  <div>
-                    <strong>Total amount:</strong>
-                    <strong>
-                      <p class="mb-0">(including VAT)</p>
-                    </strong>
-                  </div>
-                  <span><strong>{{  '€ ' + totalAmount }}</strong></span>
-                </li>
-              </ul>
-  
-              <button type="button" (click)="orderNow()" class="btn btn-success btn-lg btn-block">
-                Place Your Order
-              </button>
-            </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card mb-4">
+          <div class="card-header py-3">
+            <!-- Summary Header -->
+            <strong class="mb-0">Summary</strong>
+          </div>
+          <div class="card-body">
+            <!-- Summary List -->
+            <ul class="list-group list-group-flush">
+              <!-- Display total products from local storage -->
+              <h4 class="mb-0">{{ 'Total Products: ' + localStorageValue}}</h4>
+              <!-- Price of the products -->
+              <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
+                Price of the products:
+                <span>{{  '€ ' + totalAmount }}</span>
+              </li>
+              <!-- Shipping information -->
+              <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                Shipping:
+                <span>Free</span>
+              </li>
+              <!-- Total amount including VAT -->
+              <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
+                <div>
+                  <strong>Total amount:</strong>
+                  <strong>
+                    <p class="mb-0">(including VAT)</p>
+                  </strong>
+                </div>
+                <span><strong>{{  '€ ' + totalAmount }}</strong></span>
+              </li>
+            </ul>
+
+            <!-- Place Order Button -->
+            <button type="button" (click)="orderNow()" class="btn btn-success btn-lg btn-block">
+              Place your order
+            </button>
           </div>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
