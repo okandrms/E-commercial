@@ -5,9 +5,9 @@ import { Injectable } from '@angular/core';
 @Injectable({
   providedIn: 'root'
 })
-export class UserService {
+export class OrderService { 
   // API endpoints for user-related operations
-  private apiUrl = 'http://127.0.0.1:8000/api/orders/';
+  private apiUrl = 'http://127.0.0.1:8000/api/orders';
 
   // Constructor for the service
   constructor() {}
@@ -26,7 +26,7 @@ export class UserService {
   // Method to handle user login
   async getOrdersByUserId(userId: any) {
     // Sending a POST request to the login endpoint with user credentials
-    let response = await fetch(this.apiUrl+userId, {
+    let response = await fetch(this.apiUrl +"/"+ userId, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'

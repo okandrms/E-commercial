@@ -28,6 +28,10 @@
                   <p><strong>{{ product.productName }}</strong></p>
                  
                   <p>{{ 'Size : ' +  product.size }}</p>
+
+                  <div class="card-footer p-4 pt-0 border-top-0 ">
+                    <div class="text-center"><a class="btn btn-dark mt-auto" (click)="addToCart(selectedSize[i], product)" >Add to Cart</a></div>
+                </div>
                   
                   <!-- Data -->
                 </div>
@@ -46,7 +50,7 @@
                   <!-- Price -->
                   <p class="text-start text-md-center">
                     <strong>{{ 'Price : ' + '€ ' + product.price }}</strong>
-                    <button type="button" class="btn m-3" (click)="removeFromFavorites(product.id)">
+                    <button type="button" class="btn m-3" (click)="removeFromFavorites(product.favorite_id)">
                       <mat-icon class="mr-2">delete</mat-icon>
                     </button>
                   </p>
