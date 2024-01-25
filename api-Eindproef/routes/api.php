@@ -185,7 +185,7 @@ Route::post('/login', function (Request $request) {
         // Add other fields as needed
     ]);
       
-    $result = DB::select("SELECT name, email FROM users  WHERE email = ? AND password = ?", [$data['email'], $data['password']]);
+    $result = DB::select("SELECT id, name, email FROM users  WHERE email = ? AND password = ?", [$data['email'], $data['password']]);
       
     if( $result) {
         return response()->json(['message' => 'Login successful', 'data' => $result[0]], 200);
@@ -201,17 +201,18 @@ Route::post('/orders', function (Request $request) {
     $data = $request->validate([         
         'user_id' => 'required|numeric',      
         'product_id' => 'required|numeric',
+        'size' => 'required|string'
         // Add other fields as needed
     ]);
       
-   return  DB::table('orders')->where('id', $id)->update($data); 
+   return  DB::table('orders')->insertGetId($data);
         
 
 });
 
 Route::get('/orders/{user_id}', function ($user_id) {
           
-      $results = DB::select("SELECT p.* FROM products p inner join orders o on p.id = o.product_id WHERE o.user_id = ?", [$user_id]);
+      $results = DB::select("SELECT p.*,o.size, o.id as order_id FROM products p inner join orders o on p.id = o.product_id WHERE o.user_id = ?", [$user_id]);
       
        return  $results;   
 });
@@ -222,16 +223,17 @@ Route::post('/favorites', function (Request $request) {
     $data = $request->validate([         
         'user_id' => 'required|numeric',      
         'product_id' => 'required|numeric',
+        'size' => 'required|string'
         // Add other fields as needed
     ]);
       
-   return  DB::table('favorites')->where('id', $id)->update($data); 
+   return  DB::table('favorites')->insertGetId($data);
          
 });
 
 Route::get('/favorites/{user_id}', function ($user_id) {
           
-    $results = DB::select("SELECT p.* FROM products p inner join favorites f on p.id = f.product_id WHERE f.user_id = ?", [$user_id]);
+    $results = DB::select("SELECT p.*,f.size, f.id as favorite_id FROM products p inner join favorites f on p.id = f.product_id WHERE f.user_id = ?", [$user_id]);
     
      return  $results;   
 });

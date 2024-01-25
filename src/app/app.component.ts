@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { LocalStorageService } from './local-storage.service';
 import { Subscription } from 'rxjs';
+import { FavoriteService } from './favorites.service';
 
 // Define the component metadata
 @Component({
@@ -29,9 +30,9 @@ export class AppComponent implements OnInit {
   localStorageValue : number = 0; 
   localStorageValueFavorite : number = 0;
   private subscription: Subscription = new Subscription();
-
+  private subscriptionFavorite: Subscription = new Subscription();
   // Constructor with dependency injection
-  constructor(private router: Router,private localStorageService: LocalStorageService) {}
+  constructor(private router: Router,private localStorageService: LocalStorageService,private favoriteService: FavoriteService) {}
 
   // Method to redirect to the search page
   redirectToSearch() {
@@ -40,7 +41,7 @@ export class AppComponent implements OnInit {
   }
 
   // Lifecycle hook - ngOnInit
-  ngOnInit() {
+ async ngOnInit() {
     // Subscribe to changes in the localStorage
     this.subscription = this.localStorageService.localStorage$.subscribe(value => { 
 
@@ -49,10 +50,17 @@ export class AppComponent implements OnInit {
       let products =  this.localStorageService.getLocalStorageValue('cart'); 
       this.localStorageValue  = products ?  this.calculateTotalQuantity(products) : 0; 
 
-      let productsFavourites =  this.localStorageService.getLocalStorageValue('favorites'); 
-      this.localStorageValueFavorite  = productsFavourites ? productsFavourites.length  : 0; 
 
     });
+
+    this.subscriptionFavorite = this.favoriteService.favorite$.subscribe(async value => {
+      
+      console.log(value);
+      let user = this.localStorageService.getLocalStorageValue('user'); 
+      let productsFavourites = await this.favoriteService.getFavoritesByUserId(user.id);  
+      this.localStorageValueFavorite = productsFavourites ? productsFavourites.length : 0; 
+
+    })
 
   }
 

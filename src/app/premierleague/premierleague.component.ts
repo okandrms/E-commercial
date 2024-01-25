@@ -7,7 +7,8 @@ import { RouterModule } from '@angular/router';
 import { LocalStorageService } from '../local-storage.service';
 import { ToastrService } from 'ngx-toastr';
 import { MatIconModule } from '@angular/material/icon';
-
+import { FavoriteService } from '../favorites.service';
+import { Router } from '@angular/router';
 // Component decorator with metadata
 @Component({
   selector: 'app-premierleague',
@@ -21,9 +22,10 @@ export class PremierleagueComponent implements OnInit {
   products: any[] = [];
   selectedSize: any[] = [];
   toaster: any;
+  
 
   // Constructor to inject services
-  constructor(private productService: ProductService, private localStorageService: LocalStorageService) {
+  constructor(private productService: ProductService, private localStorageService: LocalStorageService,private favoriteService: FavoriteService, private router: Router) {
     this.toaster = inject(ToastrService);
   }
 
@@ -72,30 +74,43 @@ export class PremierleagueComponent implements OnInit {
 
     this.localStorageService.setLocalStorageValue('cart', cartProducts);
   }
-  addToFavorites(size: string, product: any) {
+  async addToFavorites(size: string, product: any) {
     if (!size) {
         this.toaster.error("Select a size");
         return; // End transaction if customer did not select a size
+    } 
+    //if the user is not logged in then redirect to login
+    if(!this.localStorageService.getLocalStorageValue('user')){
+      this.toaster.error("Please login to add to favorites");
+      this.router.navigateByUrl('/login');
+
+
+      return
     }
-    this.toaster.success(`${product.productName} added to favorites`);
-  
+   
     console.log(`Selected Size: ${size}`);
     product.size = size;
     
-    let favProducts = this.localStorageService.getLocalStorageValue('favorites');
+    let user = this.localStorageService.getLocalStorageValue('user'); 
+    let favProducts = await this.favoriteService.getFavoritesByUserId(user.id); 
+   
+    console.log(user);
     console.log(favProducts);
   
     let favoriteProducts = favProducts ?? [];
     let favoriteProductFind = favoriteProducts.find((p: any)=> p.id == product.id && p.size == size);
-    if (favoriteProductFind) {
-      favoriteProductFind.quantity = favoriteProductFind.quantity + 1;
-    } else {
-      product.quantity = 1;
-      favoriteProducts.push(product);
-    }
-  
+    if (!favoriteProductFind) { 
+      let favorite = {
+        user_id: user.id,
+        product_id: product.id,
+        size: size
+      }
+     let response = await this.favoriteService.create(favorite);  
+     if(response.status==200){
+      this.toaster.success(`${product.productName} added to favorites`);
+     }
+    }   
     
-    this.localStorageService.setLocalStorageValue('favorites', favoriteProducts);
   }
 }
 
