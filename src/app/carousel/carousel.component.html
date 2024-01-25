@@ -1,17 +1,22 @@
+<!-- Container for the carousel -->
 <div>
-    <carousel>            
-     
-        @for (item of carouselItems; track item.imageUrl) {
-            <slide>
-            <img class="image d-block w-100 img-fluid" [src]="item.imageUrl" alt="{{ item.caption }}">
+  <!-- Angular Bootstrap Carousel Component -->
+  <carousel>            
+      <!-- Loop through carousel items using Angular ngFor directive -->
+      @for (item of carouselItems; track item.imageUrl) {
+          <!-- Carousel Slide -->
+          <slide>
+              <!-- Image for the carousel slide -->
+              <img class="image d-block w-100 img-fluid" [src]="item.imageUrl" alt="{{ item.caption }}">
+              
+              <!-- Carousel Caption -->
+              <div class="carousel-caption">
+                  <h4>{{ item.caption }}</h4>
+              </div>
+          </slide>
+      }
+  </carousel>
+</div>
 
-        <div class="carousel-caption">
-          <h4>{{ item.caption }}</h4>
-        </div>
-    </slide>
-    }
-       
-    </carousel>
-  </div>
 
   

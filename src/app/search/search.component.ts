@@ -21,9 +21,12 @@ import { MatIconModule } from '@angular/material/icon';
 export class SearchComponent implements OnInit {
   products: any[] =[];
   term: string= "";
+
   selectedSize: any[] = [];
   toaster: any;
   i : number = 0;
+
+
   
   
    constructor(private productService: ProductService, private route: ActivatedRoute,private localStorageService: LocalStorageService) { 
@@ -54,6 +57,7 @@ export class SearchComponent implements OnInit {
      })
      console.log(this.products);
    }
+
 
    addToCartFromSearch(size: string, product: any) {
     if (!size) {
@@ -109,4 +113,8 @@ addToFavorites(size: string, product: any) {
 
 
 }
+
+  
+  
+
 

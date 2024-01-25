@@ -52,6 +52,8 @@ use Illuminate\Support\Facades\DB;
     
         return response()->json(['message' => 'Product created successfully', 'id' => $product], 201);
     });
+
+
     
     // PUT/PATCH Method (Update)
     Route::put('/products/{id}', function (Request $request, $id) {
@@ -137,4 +139,67 @@ Route::delete('/stocks/{id}', function ($id) {
 
     return response()->json(['message' => 'Stock deleted successfully']);
 });
+
+// User CRUD Operations
+Route::post('/users', function (Request $request) {
+    $data = $request->validate([        
+        'name' => 'required|string',
+        'email' => 'required|string',      
+        'password' => 'required|string',
+        // Add other fields as needed
+    ]);
+
+    // Insert the new users into the database
+    $stock = DB::table('users')->insertGetId($data);
+
+    return response()->json(['message' => 'Your account informations created successfully', 'id' => $stock], 201);
+});
+
+Route::put('/users', function (Request $request) {
+    $data = $request->validate([   
+        'id' => 'required|numeric',   
+        'name' => 'required|string',
+        'email' => 'required|string',      
+        'password' => 'required|string',
+        // Add other fields as needed
+    ]);
+
+    // Insert the new users into the database
+    DB::table('users')->where('id', $id)->update($data); 
+ 
+    return response()->json(['message' => 'User updated successfully']); 
+});
+
+Route::delete('/users/{id}', function ($id) {
+    // Delete the users from the database
+    DB::table('users')->where('id', $id)->delete();
+
+    return response()->json(['message' => 'User deleted successfully']); 
+});
+
+Route::post('/login', function (Request $request) {
+    
+    $data = $request->validate([         
+        'email' => 'required|string',      
+        'password' => 'required|string',
+        // Add other fields as needed
+    ]);
+      
+    $result = DB::select("SELECT name, email FROM users  WHERE email = ? AND password = ?", [$data['email'], $data['password']]);
+      
+    if( $result) {
+        return response()->json(['message' => 'Login successful', 'data' => $result[0]], 200);
+    } else {
+        return response()->json(['message' => 'Login failed'], 401);
+    }
+
+
+});
+
+
+
+
+
+
+
 

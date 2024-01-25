@@ -6,45 +6,46 @@ import { RouterModule } from '@angular/router';
 import { LocalStorageService } from '../local-storage.service';
 import { ToastrService } from 'ngx-toastr';
 
-
+// Component decorator to define the component metadata
 @Component({
-  selector: 'app-bundesliga',
+  selector: 'app-bundesliga', // Selector for the component
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
-  templateUrl: './bundesliga.component.html',
-  styleUrl: './bundesliga.component.css'
+  imports: [CommonModule, FormsModule, RouterModule], // Imported modules
+  templateUrl: './bundesliga.component.html', // HTML template file
+  styleUrl: './bundesliga.component.css' // CSS style file
 })
 
+// Component class implementation
 export class BundesligaComponent implements OnInit {
-  products: any[] =[];
-  selectedSize: any[] = [];
-  toaster: any;
+  products: any[] =[]; // Array to store products
+  selectedSize: any[] = []; // Array to store selected sizes
+  toaster: any; // Toastr service for notifications
   
-  
-  constructor(private productService: ProductService,private localStorageService: LocalStorageService) { 
-    this.toaster = inject(ToastrService);
+  // Constructor to inject services
+  constructor(private productService: ProductService, private localStorageService: LocalStorageService) { 
+    this.toaster = inject(ToastrService); // Inject ToastrService
   }
   
+  // Lifecycle hook - ngOnInit, called after the component is initialized
   async ngOnInit() {
   
+    // Fetch products from the ProductService
     this.products = await this.productService.getProducts("Bundesliga");
     
+    // Process product images and update image paths
     this.products.forEach(product => {
-        
       let images : string[] = product.imageList ? JSON.parse(product.imageList) : []; 
       let is : string[] = [];
       images.forEach((i: string) => {
         is.push("..\\assets\\images\\".replace(/\\/g, '/')+i);        
-
       })
       console.log(images);  
       product.images = is; 
-
     })
     console.log(this.products);
-    
   }
 
+  // Method to add a product to the cart
   addToCart(size: string, product: any) {
     if (!size) {
         this.toaster.error("Select a size");
@@ -55,20 +56,24 @@ export class BundesligaComponent implements OnInit {
     console.log(`Selected Size: ${size}`);
     product.size = size;
     
+    // Retrieve products from local storage
     let products = this.localStorageService.getLocalStorageValue('cart');
     console.log(products);
 
+    // Initialize cartProducts array or retrieve from local storage
     let cartProducts = products ?? [];
+    
+    // Check if the product is already in the cart
     let cartProductFind = cartProducts.find((p: any)=> p.id == product.id && p.size == size);
     if (cartProductFind) {
-      cartProductFind.quantity = cartProductFind.quantity + 1;
+      cartProductFind.quantity = cartProductFind.quantity + 1; // Increment quantity if product is already in the cart
     } else {
       product.quantity = 1;
-      cartProducts.push(product);
+      cartProducts.push(product); // Add the product to the cart if it's not already present
     }
 
-    
+    // Update the cart in local storage
     this.localStorageService.setLocalStorageValue('cart', cartProducts);
+  }
 }
-
-  }      
+      

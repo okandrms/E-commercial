@@ -1,59 +1,56 @@
-
 <body>
     <!-- Header-->
-    <header class=" py-5">
+    <header class="py-5">
         <div class="container px-4 px-lg-5 my-5">
             <div class="text-center text-white">
+                <!-- Serie A logo image -->
                 <img class="Premier img-fluid" src="assets/images/seriea.jpg" alt="">
             </div>
         </div>
     </header>
     <!-- Section-->
-    <!-- Section-->
     <section class="py-5">
         <div class="container px-4 px-lg-5 mt-5">
             <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-              @for(product of products; track product.id; let i = $index) {
-           
-                <div class="col mb-5">
-                    <div class="card h-100">
-                        <!-- Product image-->
-                        <img class="card-img-top" src={{product.images[0]}} alt="..." /> 
-                        <!-- Product details-->
-                        <div class="card-body p-4">
-                            <div class="text-center">
-                                <!-- Product name-->
-                                <h5 class="fw-bolder">{{ product.productName }}</h5>
-                                <!-- Product price in Euro -->
-                                {{ '€ ' + product.price.toFixed(2) }}
+                <!-- Loop through products using Angular's @For directive -->
+                @for(product of products; track product.id; let i = $index) {
+                    <div class="col mb-5">
+                        <div class="card h-100">
+                            <!-- Product image-->
+                            <img class="card-img-top" src={{product.images[0]}} alt="..."/>
+                            <!-- Product details-->
+                            <div class="card-body p-4">
+                                <div class="text-center">
+                                    <!-- Product name-->
+                                    <h5 class="fw-bolder">{{ product.productName }}</h5>
+                                    <!-- Product price in Euro -->
+                                    {{ '€ ' + product.price.toFixed(2) }}
+                                </div>
                             </div>
-                            
+
+                            <!-- Product size selection dropdown -->
+                            <select class="text-center w-25 h-25 mb-2 mx-auto" [(ngModel)]="selectedSize[i]" id="size" name="size">
+                                <option value="" disabled selected> Size</option>
+                                <option value="XS">XS</option>
+                                <option value="S">S</option>
+                                <option value="M">M</option>
+                                <option value="L">L</option>
+                                <option value="XL">XL</option>
+                                <option value="XXL">XXL</option>
+                            </select>
+
+                            <!-- Add to Cart button -->
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <div class="text-center">
+                                    <a class="btn btn-dark mt-auto" (click)="addToCart(selectedSize[i], product)">Add to Cart</a>
+                                </div>
+                            </div>
                         </div>
-
-                        <select class="text-center w-25 h-25 mb-2 mx-auto" [(ngModel)]="selectedSize[i]" id="size" name="size">
-                            <option value="" disabled selected> Size</option>
-                            <option value="XS">XS</option>
-                            <option value="S">S</option>
-                            <option value="M">M</option>
-                            <option value="L">L</option>
-                            <option value="XL">XL</option>
-                            <option value="XXL">XXL</option>
-                          
-                           </select>
-                           
-            
-                           
-                        
-                           <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                            <div class="text-center"><a class="btn btn-dark mt-auto" (click)="addToCart(selectedSize[i], product)" >Add to Cart</a></div>
-                           </div>
-                           
-
                     </div>
-                </div> }      
-             
+                } <!-- End @For loop -->
             </div>
         </div>
     </section>
-    
 </body>
+
+
