@@ -17,7 +17,7 @@ export class FavoriteComponent implements OnInit {
   products: any[] = [];
   totalAmount: number = 0;
   private subject = new Subject<any>();
-  localStorageValueFavorite : any = 0; 
+  localStorageValueFavorite : number = 0; 
  
 
   constructor(private productService: ProductService,private localStorageService: LocalStorageService ) {
@@ -25,10 +25,7 @@ export class FavoriteComponent implements OnInit {
 
   ngOnInit() {
     this.products = this.localStorageService.getLocalStorageValue('favorites'); 
-    this.localStorageValueFavorite(this.products);
-   
-   
-   
+    this.localStorageValueFavorite = this.products ? this.products.length : 0;      
    }
  
   removeFromFavorites(productId: any) {

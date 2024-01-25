@@ -46,8 +46,12 @@ export class AppComponent implements OnInit {
 
       console.log("APP Component Init", value); 
       // Parse the JSON value and calculate the total quantity
-      let products = value ? JSON.parse(value??"") : this.localStorageService.getLocalStorageValue('cart'); 
+      let products =  this.localStorageService.getLocalStorageValue('cart'); 
       this.localStorageValue  = products ?  this.calculateTotalQuantity(products) : 0; 
+
+      let productsFavourites =  this.localStorageService.getLocalStorageValue('favorites'); 
+      this.localStorageValueFavorite  = productsFavourites ? productsFavourites.length  : 0; 
+
     });
 
   }
