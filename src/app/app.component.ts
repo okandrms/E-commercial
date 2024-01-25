@@ -26,6 +26,7 @@ export class AppComponent implements OnInit {
   title = 'Eindproef';
   term: any ;
   localStorageValue : number = 0; 
+  localStorageValueFavorite : number = 0;
   private subscription: Subscription = new Subscription();
 
 constructor(private router: Router,private localStorageService: LocalStorageService) {}
@@ -44,6 +45,8 @@ constructor(private router: Router,private localStorageService: LocalStorageServ
     console.log("APP Component Init", value); 
     let products = value ? JSON.parse(value??"") : this.localStorageService.getLocalStorageValue('cart'); 
     this.localStorageValue  = products ?  this.calculateTotalQuantity(products) : 0; 
+    let favoriteProducts = value ? JSON.parse(value??"") : this.localStorageService.getLocalStorageValue('favorite'); 
+    this.localStorageValueFavorite  = favoriteProducts ?  this.calculateTotalQuantity(favoriteProducts) : 0; 
 
     // products ? products.length : 0;
     
