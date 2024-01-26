@@ -201,7 +201,8 @@ Route::post('/orders', function (Request $request) {
     $data = $request->validate([         
         'user_id' => 'required|numeric',      
         'product_id' => 'required|numeric',
-        'size' => 'required|string'
+        'size' => 'required|string',
+        'quantity' => 'required|numeric'
         // Add other fields as needed
     ]);
       
@@ -212,10 +213,34 @@ Route::post('/orders', function (Request $request) {
 
 Route::get('/orders/{user_id}', function ($user_id) {
           
-      $results = DB::select("SELECT p.*,o.size, o.id as order_id FROM products p inner join orders o on p.id = o.product_id WHERE o.user_id = ?", [$user_id]);
+      $results = DB::select("SELECT p.*,o.size, o.quantity, o.id as order_id FROM products p inner join orders o on p.id = o.product_id WHERE o.user_id = ?", [$user_id]);
       
        return  $results;   
 });
+
+
+Route::delete('/orders/{id}', function ($id) {
+    // Delete the users from the database
+    DB::table('orders')->where('id', $id)->delete();
+
+    return response()->json(['message' => 'Product deleted from orders successfully']); 
+});
+
+Route::put('/orders/{id}', function (Request $request, $id) {
+    $data = $request->validate([
+        'user_id' => 'required|numeric',      
+        'product_id' => 'required|numeric',
+        'size' => 'required|string',
+        'quantity' => 'required|numeric'
+        // Add other fields as needed
+    ]);
+
+    // Update the product in the database
+    DB::table('orders')->where('id', $id)->update($data);
+
+    return response()->json(['message' => 'Order updated successfully']); 
+});
+
 
 
 Route::post('/favorites', function (Request $request) {
