@@ -11,13 +11,14 @@ import { FormsModule } from '@angular/forms';
 import { LocalStorageService } from './local-storage.service';
 import { Subscription } from 'rxjs';
 import { FavoriteService } from './favorites.service';
+import { ToastrService } from 'ngx-toastr';
 
 // Define the component metadata
 @Component({
   selector: 'app-root',
   standalone: true,
   // Import required modules for the component
-  imports: [CommonModule, RouterOutlet, MatIconModule, SlickCarouselModule, RouterModule, FontAwesomeModule, FormsModule],
+  imports: [CommonModule, RouterOutlet, MatIconModule, SlickCarouselModule, RouterModule, FontAwesomeModule, FormsModule,],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
@@ -32,11 +33,12 @@ export class AppComponent implements OnInit {
   localStorageValueFavorite : number = 0;
   private subscription: Subscription = new Subscription();
   private subscriptionFavorite: Subscription = new Subscription();
+  toaster: any;
 
   
  
   // Constructor with dependency injection
-  constructor(private router: Router,private localStorageService: LocalStorageService,private favoriteService: FavoriteService) {}
+  constructor(private router: Router,private localStorageService: LocalStorageService,private favoriteService: FavoriteService, private toastr: ToastrService) {}
 
   // Method to redirect to the search page
   redirectToSearch() {
@@ -54,13 +56,7 @@ export class AppComponent implements OnInit {
       let products =  this.localStorageService.getLocalStorageValue('cart'); 
       this.localStorageValue  = products ?  this.calculateTotalQuantity(products) : 0;
       
-      
-
-
-    
-   
-  
-    });
+      });
 
     this.subscriptionFavorite = this.favoriteService.favorite$.subscribe(async value => {
       
@@ -80,6 +76,7 @@ export class AppComponent implements OnInit {
       
   
     })
+    
 
 
     
@@ -96,4 +93,26 @@ export class AppComponent implements OnInit {
     return totalQuantity;
 
 }
+logout() {
+  // Check if the user is logged in
+  const user = this.localStorageService.getLocalStorageValue('user');
+
+  if (user) {
+    // Display toaster message
+    this.toastr.success(`Logged out successfully`);
+    // Clear local storage
+    this.localStorageService.clearLocalStorage();
+    // Redirect to login
+    this.router.navigateByUrl('/login');
+  } else {
+    // Display toaster message if user is not logged in
+    this.toastr.error('You are not logged in');
+  }
+}
+
+
+}
+
+
+
 
