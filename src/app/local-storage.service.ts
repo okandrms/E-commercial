@@ -8,6 +8,11 @@ import { Subject } from 'rxjs';
   providedIn: 'root',
 })
 export class LocalStorageService {
+  clearLocalStorage(): void {
+    localStorage.clear();
+    this.localStorageSubject.next(null);
+  }
+ 
   // BehaviorSubject to emit changes in the localStorage
   private localStorageSubject = new BehaviorSubject<string | null>(null);
   // Observable to subscribe to changes in the localStorage

@@ -32,6 +32,7 @@ export class HomeComponent {
   GoToEngland() {
     this.router.navigateByUrl('/search/England');
   }
+ 
 }
 
 

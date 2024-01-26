@@ -60,10 +60,23 @@ export class LoginComponent {
 
   // Method to create a new user account
   createAccount() {
+    //if you already logged in toaster already logged in else do the following
+    if(this.localStorageService.getLocalStorageValue('user')){
+      this.toaster.error('Logged in, please logout to create a new account');
+      return;
+    }
+    // check status of response
+    if(this.account.name == '' || this.account.surname == '' || this.account.email == '' || this.account.password == ''){
+      this.toaster.error('Empty fields');
+      return;
+    }
+    
     // Call user service to create a new user
     this.userService.createUser(this.account);
     // Display success message
-    this.toaster.success('Account created');
+    this.toaster.success('Account created successfully');
+    
+    
     // Empty account fields
     this.account.name = '';
     this.account.surname = '';
@@ -75,18 +88,35 @@ export class LoginComponent {
   async login() {
     // Call user service to perform login
     let response: any = await this.userService.login(this.lgn);
+
+    //if you already logged in toaster already logged in else do the following
+    if(this.localStorageService.getLocalStorageValue('user')){
+      this.toaster.error('Already Logged In, please logout');
+      return;
+    }
+    
+    //if login fields are empty and user pushed button to login toaster empty fields else do the following
+    if(this.lgn.email == '' || this.lgn.password == ''){
+      this.toaster.error('Empty fields');
+      return;
+    }
+    
+
+
     // Parse response data
     let data = await response.json();
     console.log(data);
+    
 
     // Check the status of the response
-    if (response.status == 200) {
+     if (response.status == 200) {
       // Store user information in local storage
       this.localStorageService.setLocalStorageValue('user', data.data);
       // Display success message
       this.toaster.success('Login successful');
       // Navigate to the home route
       this.router.navigateByUrl('/home');
+      
     } else {
       // Display error message for wrong username or password
       this.toaster.error('Wrong username or password');
