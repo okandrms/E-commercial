@@ -27,10 +27,14 @@ export class AppComponent implements OnInit {
   // Define component properties
   title = 'Eindproef';
   term: any ;
+  currentUser: any = {};
   localStorageValue : number = 0; 
   localStorageValueFavorite : number = 0;
   private subscription: Subscription = new Subscription();
   private subscriptionFavorite: Subscription = new Subscription();
+
+  
+ 
   // Constructor with dependency injection
   constructor(private router: Router,private localStorageService: LocalStorageService,private favoriteService: FavoriteService) {}
 
@@ -50,7 +54,9 @@ export class AppComponent implements OnInit {
       let products =  this.localStorageService.getLocalStorageValue('cart'); 
       this.localStorageValue  = products ?  this.calculateTotalQuantity(products) : 0; 
 
-
+    
+   
+  
     });
 
     this.subscriptionFavorite = this.favoriteService.favorite$.subscribe(async value => {
@@ -60,9 +66,22 @@ export class AppComponent implements OnInit {
       let productsFavourites = await this.favoriteService.getFavoritesByUserId(user.id);  
       this.localStorageValueFavorite = productsFavourites ? productsFavourites.length : 0; 
 
+      this.currentUser = await this.localStorageService.getLocalStorageValue('user');
+      console.log(this.currentUser);
+
+      if(!this.currentUser){
+
+        return;
+      }
+      
+  
     })
 
+
+    
   }
+
+
 
   // Method to calculate the total quantity of products
   calculateTotalQuantity(products: any[]) {
@@ -72,5 +91,6 @@ export class AppComponent implements OnInit {
     });
     return totalQuantity;
   }
+
 }
 
