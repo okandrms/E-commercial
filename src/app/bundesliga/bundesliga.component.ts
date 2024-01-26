@@ -5,12 +5,15 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { LocalStorageService } from '../local-storage.service';
 import { ToastrService } from 'ngx-toastr';
+import { MatIconModule } from '@angular/material/icon';
+import { FavoriteService } from '../favorites.service';
+import { Router } from '@angular/router';
 
 // Component decorator to define the component metadata
 @Component({
   selector: 'app-bundesliga', // Selector for the component
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule], // Imported modules
+  imports: [CommonModule, FormsModule, RouterModule, MatIconModule], // Imported modules
   templateUrl: './bundesliga.component.html', // HTML template file
   styleUrl: './bundesliga.component.css' // CSS style file
 })
@@ -22,7 +25,9 @@ export class BundesligaComponent implements OnInit {
   toaster: any; // Toastr service for notifications
   
   // Constructor to inject services
-  constructor(private productService: ProductService, private localStorageService: LocalStorageService) { 
+  constructor(private productService: ProductService, private localStorageService: LocalStorageService, private favoriteService: FavoriteService, private router: Router) {
+    
+  
     this.toaster = inject(ToastrService); // Inject ToastrService
   }
   
@@ -75,5 +80,48 @@ export class BundesligaComponent implements OnInit {
     // Update the cart in local storage
     this.localStorageService.setLocalStorageValue('cart', cartProducts);
   }
+  async addToFavorites(size: string, product: any) {
+    if (!size) {
+        this.toaster.error("Select a size");
+        return; // End transaction if customer did not select a size
+    } 
+    //if the user is not logged in then redirect to login
+    if(!this.localStorageService.getLocalStorageValue('user')){
+      this.toaster.error("Please login to add to favorites");
+      this.router.navigateByUrl('/login');
+
+
+      return
+    }
+   
+    console.log(`Selected Size: ${size}`);
+    product.size = size;
+    
+    let user = this.localStorageService.getLocalStorageValue('user'); 
+    let favProducts = await this.favoriteService.getFavoritesByUserId(user.id); 
+   
+    console.log(user);
+    console.log(favProducts);
+  
+    let favoriteProducts = favProducts ?? [];
+    let favoriteProductFind = favoriteProducts.find((p: any)=> p.id == product.id && p.size == size);
+    if (favoriteProductFind) {
+      this.toaster.error(`${product.productName} already in favorites`);//if size is already in favorites then give error
+      return
+    }
+    if (!favoriteProductFind) { 
+      let favorite = {
+        user_id: user.id,
+        product_id: product.id,
+        size: size
+      }
+     let response = await this.favoriteService.create(favorite);  
+     if(response.status==200){
+      this.toaster.success(`${product.productName} added to favorites`);
+     }
+    }   
+    
+  }
 }
+
       
