@@ -90,6 +90,19 @@ export class PremierleagueComponent implements OnInit {
      if(response.status==200){
       this.toaster.success(`${product.productName} added to cart`);
      }
+    }
+    else {
+      orderProductFind.quantity += 1;
+      let order = {
+        user_id: user.id,
+        product_id: product.id,
+        size: size,
+        quantity: orderProductFind.quantity 
+      }
+     let response = await this.orderService.updateOrder(order, orderProductFind.order_id);  
+     if(response.status==200){
+      this.toaster.success(`${product.productName} added to cart`);
+     }
     }   
     
   }

@@ -37,7 +37,6 @@ export class ShoppingcartComponent implements OnInit {
     let totalQuantity = 0;
     products.forEach(product => {
       totalQuantity += product.quantity;
-      this.localStorageService.setLocalStorageValue('cart', products);
     });
     return totalQuantity;
   }
@@ -46,8 +45,9 @@ export class ShoppingcartComponent implements OnInit {
     let tempTotalAmount = 0;
     this.products.forEach(product => {
       tempTotalAmount += product.price * product.quantity;
-      this.totalAmount = parseFloat(tempTotalAmount.toFixed(2));
+     
     });
+    this.totalAmount = parseFloat(tempTotalAmount.toFixed(2));
   }
 
   async removeFromCart(order_id: any, ) {
@@ -82,7 +82,7 @@ export class ShoppingcartComponent implements OnInit {
        if (orderResponse) {
          this.toaster.success("Your order has been placed! Thank you for shopping with us!");
          this.router.navigateByUrl('/home');
-         this.localStorageService.setLocalStorageValue('cart', []);
+        
        } else {
          throw new Error("Order creation failed");
        }

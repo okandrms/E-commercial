@@ -32,7 +32,7 @@ export class SearchComponent implements OnInit {
 
 
   
-   constructor(private productService: ProductService, private route: ActivatedRoute,private localStorageService: LocalStorageService, private orderService: OrderService,private favoriteService: FavoriteService) { 
+   constructor(private productService: ProductService, private route: ActivatedRoute,private localStorageService: LocalStorageService, private orderService: OrderService,private favoriteService: FavoriteService,private router : Router) { 
 
     this.toaster = inject(ToastrService);
    }
@@ -140,11 +140,15 @@ async addToFavorites(size: string, product: any) {
         product_id: product.id,
         size: size
       }
+
      let response = await this.favoriteService.create(favorite);  
      if(response.status==200){
       this.toaster.success(`${product.productName} added to favorites`);
      }
-    }   
+    } 
+    else {
+      this.toaster.error(`${product.productName} already in favorites`);//if size is already in favorites then give error
+    }  
 }
 }
   
