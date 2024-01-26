@@ -1,5 +1,6 @@
 // Importing required modules and decorators
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 
 // Decorator to mark the class as injectable and define its scope
 @Injectable({
@@ -9,19 +10,55 @@ export class OrderService {
   // API endpoints for user-related operations
   private apiUrl = 'http://127.0.0.1:8000/api/orders';
 
+  private ordersSubject = new BehaviorSubject<string | null>(null);
+
+  orders$ = this.ordersSubject.asObservable();
+
   // Constructor for the service
   constructor() {}
 
   // Method to create a new user
   async createOrder(orders: any) {
-    return await fetch(this.apiUrl, {
+    
+    let res = await fetch(this.apiUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(orders) 
     });
+    this.ordersSubject.next("Created");  
+    return res;
+
   }
+
+  async updateOrder(orders: any, id: any) {
+    
+    let res =  await fetch(this.apiUrl+"/"+id, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(orders) 
+    });
+
+    this.ordersSubject.next("Updated"); 
+    return res;
+  }
+
+
+  async delete(id: any) {    
+    let res = await fetch(this.apiUrl+"/"+id, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    this.ordersSubject.next("Deleted"); 
+    return res;
+  }
+
+ 
 
   // Method to handle user login
   async getOrdersByUserId(userId: any) {

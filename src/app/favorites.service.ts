@@ -7,6 +7,7 @@ import { Subject } from 'rxjs';
   providedIn: 'root'
 })
 export class FavoriteService {
+  [x: string]: any;
   // API endpoints for user-related operations
   private apiUrl = 'http://127.0.0.1:8000/api/favorites';
    // BehaviorSubject to emit changes in the localStorage
@@ -18,25 +19,28 @@ export class FavoriteService {
   constructor() {}
 
   // Method to create a new user
-  async create(list: any) {
-    this.favoriteSubject.next("Created"); 
-    return await fetch(this.apiUrl, {
+  async create(favorite: any) {
+    let res = await fetch(this.apiUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(list) 
+      body: JSON.stringify(favorite) 
     });
+    this.favoriteSubject.next("Created");  
+    return res;
   }
 
   async delete(id: any) {
     this.favoriteSubject.next("Deleted"); 
-    return await fetch(this.apiUrl+"/"+id, {
+    let res = await fetch(this.apiUrl+"/"+id, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json'
       }
     });
+    this.favoriteSubject.next("Created");  
+    return res;
   }
 
   // Method to handle user login
