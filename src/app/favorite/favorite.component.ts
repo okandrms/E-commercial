@@ -94,6 +94,7 @@ export class FavoriteComponent implements OnInit {
 
     this.localStorageService.setLocalStorageValue('cart', cartProducts);
   }
+  
 
   
 }

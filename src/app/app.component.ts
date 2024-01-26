@@ -43,12 +43,15 @@ export class AppComponent implements OnInit {
   // Lifecycle hook - ngOnInit
  async ngOnInit() {
     // Subscribe to changes in the localStorage
-    this.subscription = this.localStorageService.localStorage$.subscribe(value => { 
+    this.subscription = this.localStorageService.localStorage$.subscribe(async value => { 
 
       console.log("APP Component Init", value); 
       // Parse the JSON value and calculate the total quantity
       let products =  this.localStorageService.getLocalStorageValue('cart'); 
-      this.localStorageValue  = products ?  this.calculateTotalQuantity(products) : 0; 
+      this.localStorageValue  = products ?  this.calculateTotalQuantity(products) : 0;
+      
+      
+
 
 
     });
@@ -58,7 +61,8 @@ export class AppComponent implements OnInit {
       console.log(value);
       let user = this.localStorageService.getLocalStorageValue('user'); 
       let productsFavourites = await this.favoriteService.getFavoritesByUserId(user.id);  
-      this.localStorageValueFavorite = productsFavourites ? productsFavourites.length : 0; 
+      this.localStorageValueFavorite = productsFavourites ? productsFavourites.length : 0;
+
 
     })
 
@@ -72,5 +76,8 @@ export class AppComponent implements OnInit {
     });
     return totalQuantity;
   }
+  
+  
+  
 }
 
