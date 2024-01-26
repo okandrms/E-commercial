@@ -107,6 +107,8 @@ logout() {
   } else {
     // Display toaster message if user is not logged in
     this.toastr.error('You are not logged in');
+    // Redirect to login
+    this.router.navigateByUrl('/login');
   }
 }
 
