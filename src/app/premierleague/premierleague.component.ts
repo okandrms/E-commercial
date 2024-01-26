@@ -97,7 +97,10 @@ export class PremierleagueComponent implements OnInit {
     if (!size) {
         this.toaster.error("Select a size");
         return; // End transaction if customer did not select a size
-    } 
+    } //if size is already in favorites then give error
+    
+    
+ 
     //if the user is not logged in then redirect to login
     if(!this.localStorageService.getLocalStorageValue('user')){
       this.toaster.error("Please login to add to favorites");
@@ -119,6 +122,10 @@ export class PremierleagueComponent implements OnInit {
   
     let favoriteProducts = favProducts ?? [];
     let favoriteProductFind = favoriteProducts.find((p: any)=> p.id == product.id && p.size == size);
+    if (favoriteProductFind) {
+      this.toaster.error(`${product.productName} already in favorites`);//if size is already in favorites then give error
+      return
+    }
     if (!favoriteProductFind) { 
       let favorite = {
         user_id: user.id,

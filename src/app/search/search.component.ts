@@ -9,6 +9,7 @@ import { ToastrService } from 'ngx-toastr';
 import { MatIconModule } from '@angular/material/icon';
 import { OrderService } from '../orders.service';
 import { FavoriteService } from '../favorites.service';
+import { Router } from '@angular/router';
 
 
 
@@ -17,7 +18,7 @@ import { FavoriteService } from '../favorites.service';
 @Component({
   selector: 'app-search',
   standalone: true,
-  imports: [RouterModule, CommonModule, FormsModule,MatIconModule ],
+  imports: [RouterModule, CommonModule, FormsModule, MatIconModule],
   templateUrl: './search.component.html',
   styleUrl: './search.component.css'
 })
@@ -31,8 +32,8 @@ export class SearchComponent implements OnInit {
 
 
   
-  
    constructor(private productService: ProductService, private route: ActivatedRoute,private localStorageService: LocalStorageService, private orderService: OrderService,private favoriteService: FavoriteService) { 
+
     this.toaster = inject(ToastrService);
    }
   
@@ -111,9 +112,16 @@ async addToFavorites(size: string, product: any) {
   if (!size) {
       this.toaster.error("Select a size");
       return; // End transaction if customer did not select a size
-  }
-  this.toaster.success(`${product.productName} added to favorites`);
+  } 
+  //if the user is not logged in then redirect to login
+  if(!this.localStorageService.getLocalStorageValue('user')){
+    this.toaster.error("Please login to add to favorites");
+    this.router.navigateByUrl('/login');
 
+
+    return
+  }
+ 
   console.log(`Selected Size: ${size}`);
   product.size = size;
   
@@ -138,10 +146,7 @@ async addToFavorites(size: string, product: any) {
      }
     }   
 }
-
-
 }
-
   
   
 

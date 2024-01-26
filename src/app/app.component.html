@@ -56,11 +56,11 @@
       </div>
     </header>
 
-    <!-- Main Content -->
     <div class="col-md-12">
       <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav2" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav2"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarNav2">
@@ -81,18 +81,18 @@
               <li class="nav-item">
                 <a class="nav-link" href="/euro2024" style="color: white;">Euro 2024</a>
               </li>
-              <li class="  ">
-                <a class="nav-link  welcome"  style="color: white;">Welcome, <strong> {{ currentUser.name }}! </strong></a>
-              </li>
             </ul>
+            <!-- "Welcome, User" message and Logout button at the end -->
+            <div class="ms-auto d-flex align-items-center">
+              <a v-if="currentUser" class="nav-link welcome" style="color: white;">Welcome {{ currentUser.name }}</a>
+              <button (click)="logout()" class="btn" type="button" style="background-color: rgb(219, 38, 38); color: white;">Logout</button>
+            </div>
           </div>
         </div>
       </nav>
     </div>
-
     
-  </div>
-</div>
+         
 
 <!-- Main Content Outlet -->
 <div class="container">

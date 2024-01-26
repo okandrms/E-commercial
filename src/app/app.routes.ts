@@ -10,7 +10,7 @@ import { ShoppingcartComponent } from './shoppingcart/shoppingcart.component';
 import { FavoriteComponent } from './favorite/favorite.component';
 import { SearchComponent } from './search/search.component';
 import { BuynowComponent } from './buynow/buynow.component';
-import { LogoutComponent } from './logout/logout.component';
+
 
 
 
@@ -66,10 +66,7 @@ export const routes: Routes = [
         path: 'buynow',
         component: BuynowComponent
         },
-        {
-        path: 'Logout',
-        component: LogoutComponent
-        },
+        
 
 
     
