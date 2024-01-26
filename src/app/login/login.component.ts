@@ -39,7 +39,7 @@ export class LoginComponent {
   };
 
   // ToastrService instance for displaying notifications
-  toaster: any;
+  toaster: any; 
 
   // Constructor to inject necessary services and initialize form
   constructor(
@@ -47,12 +47,7 @@ export class LoginComponent {
     private router: Router,
     private userService: UserService,
     private localStorageService: LocalStorageService
-  ) {
-    // Initialize login form with validation rules
-    this.loginObj.loginForm = this.formBuilder.group({
-      username: ['', Validators.required],
-      password: ['', Validators.required],
-    });
+  ) {    
 
     // Inject ToastrService
     this.toaster = inject(ToastrService);
@@ -87,20 +82,21 @@ export class LoginComponent {
   // Method to handle the login process
   async login() {
     // Call user service to perform login
-    let response: any = await this.userService.login(this.lgn);
-
-    //if you already logged in toaster already logged in else do the following
-    if(this.localStorageService.getLocalStorageValue('user')){
-      this.toaster.error('Already Logged In, please logout');
-      return;
-    }
-    
-    //if login fields are empty and user pushed button to login toaster empty fields else do the following
-    if(this.lgn.email == '' || this.lgn.password == ''){
+     //if login fields are empty and user pushed button to login toaster empty fields else do the following
+     if(this.lgn.email === '' || this.lgn.password === ''){
       this.toaster.error('Empty fields');
       return;
     }
-    
+
+     //if you already logged in toaster already logged in else do the following
+     if(this.localStorageService.getLocalStorageValue('user')){
+      this.toaster.error('Already Logged In, please logout');
+      return;
+    }
+
+    console.log(this.lgn); 
+    let response: any = await this.userService.login(this.lgn);
+
 
 
     // Parse response data
