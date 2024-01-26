@@ -7,6 +7,9 @@ import { ActivatedRoute } from '@angular/router';
 import { LocalStorageService } from '../local-storage.service';
 import { ToastrService } from 'ngx-toastr';
 import { MatIconModule } from '@angular/material/icon';
+import { OrderService } from '../orders.service';
+import { FavoriteService } from '../favorites.service';
+
 
 
 
@@ -29,7 +32,7 @@ export class SearchComponent implements OnInit {
 
   
   
-   constructor(private productService: ProductService, private route: ActivatedRoute,private localStorageService: LocalStorageService) { 
+   constructor(private productService: ProductService, private route: ActivatedRoute,private localStorageService: LocalStorageService, private orderService: OrderService,private favoriteService: FavoriteService) { 
     this.toaster = inject(ToastrService);
    }
   
@@ -59,7 +62,7 @@ export class SearchComponent implements OnInit {
    }
 
 
-   addToCartFromSearch(size: string, product: any) {
+   async addToCartFromSearch(size: string, product: any) {
     if (!size) {
         this.toaster.error("Select a size");
         return; // End transaction if customer did not select a size
@@ -69,23 +72,42 @@ export class SearchComponent implements OnInit {
     console.log(`Selected Size: ${size}`);
     product.size = size;
     
-    let products = this.localStorageService.getLocalStorageValue('cart');
-    console.log(products);
+    let user = this.localStorageService.getLocalStorageValue('user'); 
+    let ordProducts = await this.orderService.getOrdersByUserId(user.id); 
+    console.log(user);
+    console.log(ordProducts);
 
-    let cartProducts = products ?? [];
-    let cartProductFind = cartProducts.find((p: any)=> p.id == product.id && p.size == size);
-    if (cartProductFind) {
-      cartProductFind.quantity = cartProductFind.quantity + 1;
-    } else {
-      product.quantity = 1;
-      cartProducts.push(product);
+    let orderProducts = ordProducts ?? [];
+    let orderProductFind = orderProducts.find((p: any)=> p.id == product.id && p.size == size);
+    if (!orderProductFind) { 
+      let order = {
+        user_id: user.id,
+        product_id: product.id,
+        size: size,
+        quantity: 1 
+      }
+     let response = await this.orderService.createOrder(order);  
+     if(response.status==200){
+      this.toaster.success(`${product.productName} added to cart`);
+     }
+
+    }   
+    else {
+      orderProductFind.quantity += 1;
+      let order = {
+        user_id: user.id,
+        product_id: product.id,
+        size: size,
+        quantity: orderProductFind.quantity 
+      }
+      let response = await this.orderService.updateOrder(order,orderProductFind.order_id);
+      if(response.status==200){
+        this.toaster.success(`${product.productName} added to cart`);
+       }
     }
-
-    
-    this.localStorageService.setLocalStorageValue('cart', cartProducts);
 }
 
-addToFavorites(size: string, product: any) {
+async addToFavorites(size: string, product: any) {
   if (!size) {
       this.toaster.error("Select a size");
       return; // End transaction if customer did not select a size
@@ -95,20 +117,26 @@ addToFavorites(size: string, product: any) {
   console.log(`Selected Size: ${size}`);
   product.size = size;
   
-  let favProducts = this.localStorageService.getLocalStorageValue('favorites');
-  console.log(favProducts);
-
-  let favoriteProducts = favProducts ?? [];
-  let favoriteProductFind = favoriteProducts.find((p: any)=> p.id == product.id && p.size == size);
-  if (favoriteProductFind) {
-    favoriteProductFind.quantity = favoriteProductFind.quantity + 1;
-  } else {
-    product.quantity = 1;
-    favoriteProducts.push(product);
-  }
+  let user = this.localStorageService.getLocalStorageValue('user'); 
+    let favProducts = await this.favoriteService.getFavoritesByUserId(user.id); 
+   
+    console.log(user);
+    console.log(favProducts);
 
   
-  this.localStorageService.setLocalStorageValue('favorites', favoriteProducts);
+    let favoriteProducts = favProducts ?? [];
+    let favoriteProductFind = favoriteProducts.find((p: any)=> p.id == product.id && p.size == size);
+    if (!favoriteProductFind) { 
+      let favorite = {
+        user_id: user.id,
+        product_id: product.id,
+        size: size
+      }
+     let response = await this.favoriteService.create(favorite);  
+     if(response.status==200){
+      this.toaster.success(`${product.productName} added to favorites`);
+     }
+    }   
 }
 
 

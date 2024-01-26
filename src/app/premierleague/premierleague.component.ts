@@ -9,6 +9,8 @@ import { ToastrService } from 'ngx-toastr';
 import { MatIconModule } from '@angular/material/icon';
 import { FavoriteService } from '../favorites.service';
 import { Router } from '@angular/router';
+import { OrderService } from '../orders.service';
+
 // Component decorator with metadata
 @Component({
   selector: 'app-premierleague',
@@ -25,12 +27,13 @@ export class PremierleagueComponent implements OnInit {
   
 
   // Constructor to inject services
-  constructor(private productService: ProductService, private localStorageService: LocalStorageService,private favoriteService: FavoriteService, private router: Router) {
+  constructor(private productService: ProductService, private localStorageService: LocalStorageService,private favoriteService: FavoriteService, private router: Router, private orderService: OrderService) {
     this.toaster = inject(ToastrService);
   }
 
   // Lifecycle hook, executed after the component's view has been initialized
   async ngOnInit() {
+    
     // Fetch products from the ProductService based on the category "PREMIER_LEAGUE"
     this.products = await this.productService.getProducts("PREMIER_LEAGUE");
 
@@ -45,34 +48,50 @@ export class PremierleagueComponent implements OnInit {
       product.images = is;
     })
     console.log(this.products);
+
+
   }
 
   // Function to add a product to the cart
-  addToCart(size: string, product: any) {
-    // Check if a size is selected
+  async addToCart(size: string, product: any) {
     if (!size) {
-      this.toaster.error("Select a size");
-      return; // End transaction if the customer did not select a size
-    }
-    this.toaster.success(`${product.productName} added to cart`);
+        this.toaster.error("Select a size");
+        return; // End transaction if customer did not select a size
+    } 
+    //if the user is not logged in then redirect to login
+    if(!this.localStorageService.getLocalStorageValue('user')){
+      this.toaster.error("Please login to add to cart");
+      this.router.navigateByUrl('/login');
 
+
+      return
+    }
+   
     console.log(`Selected Size: ${size}`);
     product.size = size;
+    
+    let user = this.localStorageService.getLocalStorageValue('user'); 
+    let ordProducts = await this.orderService.getOrdersByUserId(user.id); 
+   
+    console.log(user);
+    console.log(ordProducts);
 
-    // Retrieve and update cart information from local storage
-    let products = this.localStorageService.getLocalStorageValue('cart');
-    console.log(products);
-
-    let cartProducts = products ?? [];
-    let cartProductFind = cartProducts.find((p: any) => p.id == product.id && p.size == size);
-    if (cartProductFind) {
-      cartProductFind.quantity = cartProductFind.quantity + 1;
-    } else {
-      product.quantity = 1;
-      cartProducts.push(product);
-    }
-
-    this.localStorageService.setLocalStorageValue('cart', cartProducts);
+  
+    let orderProducts = ordProducts ?? [];
+    let orderProductFind = orderProducts.find((p: any)=> p.id == product.id && p.size == size);
+    if (!orderProductFind) { 
+      let order = {
+        user_id: user.id,
+        product_id: product.id,
+        size: size,
+        quantity: 1 
+      }
+     let response = await this.orderService.createOrder(order);  
+     if(response.status==200){
+      this.toaster.success(`${product.productName} added to cart`);
+     }
+    }   
+    
   }
   async addToFavorites(size: string, product: any) {
     if (!size) {
@@ -96,6 +115,7 @@ export class PremierleagueComponent implements OnInit {
    
     console.log(user);
     console.log(favProducts);
+
   
     let favoriteProducts = favProducts ?? [];
     let favoriteProductFind = favoriteProducts.find((p: any)=> p.id == product.id && p.size == size);
@@ -112,6 +132,9 @@ export class PremierleagueComponent implements OnInit {
     }   
     
   }
+
+
+  
 }
 
 

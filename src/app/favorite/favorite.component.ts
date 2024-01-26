@@ -7,6 +7,8 @@ import { ProductService } from '../apiservice.service';
 import { CommonModule } from '@angular/common';
 import { FavoriteService } from '../favorites.service';
 import { ToastrService } from 'ngx-toastr';
+import { OrderService } from '../orders.service';
+
 
 @Component({
   selector: 'app-favorite',
@@ -24,7 +26,7 @@ export class FavoriteComponent implements OnInit {
   
  
 
-  constructor(private productService: ProductService,private localStorageService: LocalStorageService,private favoriteService: FavoriteService,private toaster: ToastrService) {
+  constructor(private productService: ProductService,private localStorageService: LocalStorageService,private favoriteService: FavoriteService,private toaster: ToastrService, private orderService: OrderService) {
   }
 
   async ngOnInit() {
@@ -71,7 +73,7 @@ export class FavoriteComponent implements OnInit {
    
     
   }
-  addToCart(size: string, product: any) {
+  async addToCart(size: string, product: any) {
     // Check if a size is selected
     
     this.toaster.success(`${product.productName} added to cart`);
@@ -80,19 +82,40 @@ export class FavoriteComponent implements OnInit {
     product.size = size;
 
     // Retrieve and update cart information from local storage
-    let products = this.localStorageService.getLocalStorageValue('cart');
-    console.log(products);
+    let user = this.localStorageService.getLocalStorageValue('user'); 
+    let ordProducts = await this.orderService.getOrdersByUserId(user.id); 
+    console.log(user);
+    console.log(ordProducts);
 
-    let cartProducts = products ?? [];
-    let cartProductFind = cartProducts.find((p: any) => p.id == product.id && p.size == size);
-    if (cartProductFind) {
-      cartProductFind.quantity = cartProductFind.quantity + 1;
-    } else {
-      product.quantity = 1;
-      cartProducts.push(product);
+    let orderProducts = ordProducts ?? [];
+    let orderProductFind = orderProducts.find((p: any)=> p.id == product.id && p.size == size);
+    if (!orderProductFind) { 
+      let order = {
+        user_id: user.id,
+        product_id: product.id,
+        size: size,
+        quantity: 1 
+      }
+     let response = await this.orderService.createOrder(order);  
+     if(response.status==200){
+      this.toaster.success(`${product.productName} added to cart`);
+     }
+
+    }   
+    else {
+      orderProductFind.quantity += 1;
+      let order = {
+        user_id: user.id,
+        product_id: product.id,
+        size: size,
+        quantity: orderProductFind.quantity 
+      }
+      let response = await this.orderService.updateOrder(order,orderProductFind.order_id);
+      if(response.status==200){
+        this.toaster.success(`${product.productName} added to cart`);
+       }
     }
 
-    this.localStorageService.setLocalStorageValue('cart', cartProducts);
   }
 
   

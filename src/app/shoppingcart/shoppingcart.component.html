@@ -49,7 +49,7 @@
                 <!-- Product Price and Remove Button -->
                 <p class="text-start text-md-center">
                   <strong>{{ '€ ' + product.price }}</strong>
-                  <button type="button" class="btn m-3" (click)="removeFromCart(product.id)">
+                  <button type="button" class="btn m-3" (click)="removeFromCart(product.order_id)">
                     <mat-icon class="mr-2">delete</mat-icon>
                   </button>
                 </p>

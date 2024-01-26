@@ -1,4 +1,3 @@
-// Import necessary Angular modules and services
 import { Component, OnInit, inject } from '@angular/core';
 import { Subject } from 'rxjs';
 import { LocalStorageService } from '../local-storage.service';
@@ -6,6 +5,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { OrderService } from '../orders.service';
+
+
 
 @Component({
   selector: 'app-shoppingcart',
@@ -15,38 +17,31 @@ import { ToastrService } from 'ngx-toastr';
   imports: [MatIconModule, FormsModule]
 })
 export class ShoppingcartComponent implements OnInit {
-  // Initialize variables
   products: any[] = [];
   totalAmount: number = 0;
-  private subject = new Subject<any>();
   localStorageValue: number = 0;
-  toaster: any;
+  private subject = new Subject<any>();
+  
 
-  // Constructor with dependency injection
-  constructor(private localStorageService: LocalStorageService, private router: Router) {
+  constructor(private localStorageService: LocalStorageService, private router: Router, private orderService: OrderService, private toaster: ToastrService) {
     this.toaster = inject(ToastrService);
   }
 
-  // Angular lifecycle hook: ngOnInit
-  ngOnInit() {
-    // Retrieve products from local storage
-    this.products = this.localStorageService.getLocalStorageValue('cart');
-    // Calculate total amount and total quantity
-    this.calculateTotalAmount();
-    this.localStorageValue = this.products ? this.calculateTotalQuantity(this.products) : 0;
-  }
+  async ngOnInit() {
 
-  // Calculate total quantity of products in the cart
+    this.getProductsFromDB();
+       
+   }
+
   calculateTotalQuantity(products: any[]): number {
     let totalQuantity = 0;
     products.forEach(product => {
       totalQuantity += product.quantity;
-      this.localStorageService.setLocalStorageValue('cart', products); // Update local storage value to display total products in the cart
+      this.localStorageService.setLocalStorageValue('cart', products);
     });
     return totalQuantity;
   }
 
-  // Calculate total amount of products in the cart
   calculateTotalAmount(): void {
     let tempTotalAmount = 0;
     this.products.forEach(product => {
@@ -55,62 +50,104 @@ export class ShoppingcartComponent implements OnInit {
     });
   }
 
-  // Remove a product from the cart
-  removeFromCart(productId: any): void {
-    let index = this.products.findIndex(p => p.id === productId);
-    this.products.splice(index, 1);
-    this.localStorageService.setLocalStorageValue('cart', this.products);
-    this.localStorageValue = this.products ? this.products.length : 0;
-    this.calculateTotalAmount();
-    if (this.products.length === 0) {
-      this.totalAmount = 0;
-    }
-  }
+  async removeFromCart(order_id: any, ) {
 
-  // Process the order
-  orderNow(): void {
-    // Check if the user is logged in (exists in localStorage)
+    let response = await this.orderService.delete(order_id);
+ 
+    if(response.status==200){
+    this.getProductsFromDB();
+    }
+    
+    
+     
+   }
+
+  async orderNow(): Promise<void> {
     const user = this.localStorageService.getLocalStorageValue('user');
-
     if (!user) {
-      // User is not logged in, show toaster message
-      this.toaster.error("Please log in before you order");
-      this.router.navigateByUrl('/login');
-      return;
+       this.toaster.error("Please log in before you order");
+       this.router.navigateByUrl('/login');
+       return;
     }
-
-    // Continue with the order process
+   
     if (this.calculateTotalQuantity(this.products) === 0) {
-      this.toaster.error("Cart is empty");
-      return;
+       this.toaster.error("Cart is empty");
+       return;
     }
+   
+    try {
+       this.toaster.success("Ordering...");
+       // Assuming you have a method in OrderService to place an order
+       const orderResponse = await this.orderService.createOrder(user.id);
+       if (orderResponse) {
+         this.toaster.success("Your order has been placed! Thank you for shopping with us!");
+         this.router.navigateByUrl('/home');
+         this.localStorageService.setLocalStorageValue('cart', []);
+       } else {
+         throw new Error("Order creation failed");
+       }
+    } catch (error) {
+       console.error("Error placing order:", error);
+       this.toaster.error("An error occurred while placing the order. Please try again later.");
+    }
+   }
+   
 
-    // Simulate order processing delay with a setTimeout
-    this.toaster.success("Ordering...");
-    setTimeout(() => {
-      this.toaster.success("Your order has been placed! Thank you for shopping with us!");
-      this.router.navigateByUrl('/home');
-      this.localStorageService.setLocalStorageValue('cart', []); // Clear the cart after placing the order
-    }, 3000);
-  }
-
-  // Increase the quantity of a product in the cart
-  increaseQuantity(product: { quantity: number }): void {
+  async increaseQuantity(product: any ) {
     product.quantity = (product.quantity || 0) + 1;
     this.calculateTotalAmount();
-    this.localStorageValue = this.calculateTotalQuantity(this.products); // Update local storage value to display total products
+    let user = this.localStorageService.getLocalStorageValue('user'); 
+    let order = {
+      user_id: user.id,
+      product_id: product.id,
+      size: product.size,
+      quantity: product.quantity 
+    }
+    this.orderService.updateOrder(order,product.order_id);
+
+    this.getProductsFromDB();
+ 
+
   }
 
-  // Decrease the quantity of a product in the cart
-  decreaseQuantity(product: { id(id: any): unknown; quantity: number }): void {
+  decreaseQuantity(product: any) {
     if (product.quantity > 0) {
       product.quantity -= 1;
       this.calculateTotalAmount();
-      this.localStorageValue = this.calculateTotalQuantity(this.products); // Update local storage value to display total products
+      let user = this.localStorageService.getLocalStorageValue('user'); 
+      let order = {
+        user_id: user.id,
+        product_id: product.id,
+        size: product.size,
+        quantity: product.quantity 
+      }
+      this.orderService.updateOrder(order,product.order_id);
+  
+      this.getProductsFromDB();
     }
     if (product.quantity === 0) {
       this.removeFromCart(product.id);
     }
+  }
+
+  async getProductsFromDB() {
+    let user = this.localStorageService.getLocalStorageValue('user'); 
+    this.products  = await this.orderService.getOrdersByUserId(user.id); 
+    console.log("products",this.products);      
+    
+    // Process product images
+    this.products.forEach(product => {
+      let images: string[] = product.imageList ? JSON.parse(product.imageList) : [];
+      let is: string[] = [];
+      images.forEach((i: string) => {
+        is.push("..\\assets\\images\\".replace(/\\/g, '/') + i);
+      })
+      console.log(images);
+      product.images = is;
+    });
+    // Calculate total amount and total quantity
+    this.calculateTotalAmount();
+    this.localStorageValue =  this.products ? this.calculateTotalQuantity(this.products) : 0;
   }
 }
 
