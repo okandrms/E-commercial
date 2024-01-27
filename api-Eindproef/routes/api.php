@@ -26,11 +26,47 @@ use Illuminate\Support\Facades\DB;
     
 // });
 
-    Route::apiResource('teams', TeamController::class);
-    
-    // Route::apiResource('stocks', StockController::class);
+Route::get('/teams', function () {
+    return DB::table('teams')->get();
+});
 
-    // Route::apiResource('products', ProductController::class);
+Route::post('/teams', function (Request $request) {
+    $data = $request->validate([
+        'teamName' => 'required|string',
+        'category' => 'required|string'
+       
+        // Add other fields as needed
+    ]);
+
+    // Insert the new product into the database
+    $product = DB::table('teams')->insertGetId($data);
+
+    return response()->json(['message' => 'Team created successfully', 'id' => $product], 201);
+});
+
+
+
+// PUT/PATCH Method (Update)
+Route::put('/teams/{id}', function (Request $request, $id) {
+    $data = $request->validate([
+        'teamName' => 'required|string',
+        'category' => 'required|string'
+        // Add other fields as needed
+    ]);
+
+    // Update the product in the database
+    DB::table('teams')->where('id', $id)->update($data);
+
+    return response()->json(['message' => 'Team updated successfully']);
+});
+
+Route::delete('/teams/{id}', function ($id) {
+    // Delete the product from the database
+    DB::table('teams')->where('id', $id)->delete();
+
+    return response()->json(['message' => 'Team deleted successfully']);
+});
+
 
     Route::get('/products', function () {
         return DB::table('products')->get();
