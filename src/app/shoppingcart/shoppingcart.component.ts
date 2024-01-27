@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { OrderService } from '../orders.service';
+import { ConfirmedOrderService } from '../confirmedorders.service';
 
 
 
@@ -23,7 +24,7 @@ export class ShoppingcartComponent implements OnInit {
   private subject = new Subject<any>();
   
 
-  constructor(private localStorageService: LocalStorageService, private router: Router, private orderService: OrderService, private toaster: ToastrService) {
+  constructor(private localStorageService: LocalStorageService, private router: Router, private orderService: OrderService, private toaster: ToastrService, private confirmedOrderService: ConfirmedOrderService) {
     this.toaster = inject(ToastrService);
   }
 
@@ -78,10 +79,24 @@ export class ShoppingcartComponent implements OnInit {
     try {
        this.toaster.success("Ordering...");
        // Assuming you have a method in OrderService to place an order
-       const orderResponse = await this.orderService.createOrder(user.id);
+       let confirmedOrders : any = [];        
+       this.products.forEach(product => {
+         let order = {
+          product_id: product.id,
+          size: product.size,
+          quantity: product.quantity,
+          user_id: user.id
+         }; 
+         confirmedOrders.push(order);
+       })
+       const orderResponse = await this.confirmedOrderService.createOrder(confirmedOrders);
        if (orderResponse) {
+         console.log("Order created:", orderResponse);
+         this.products.forEach(product => {
+           this.orderService.delete(product.order_id);
+         })
          this.toaster.success("Your order has been placed! Thank you for shopping with us!");
-         this.router.navigateByUrl('/home');
+         this.router.navigateByUrl('/order');
         
        } else {
          throw new Error("Order creation failed");

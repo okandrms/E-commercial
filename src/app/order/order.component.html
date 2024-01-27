@@ -1,0 +1,67 @@
+<section class="h-100 gradient-custom">
+    <div class="container py-5">
+      <div class="row d-flex justify-content-center my-4">
+        <div class="col-md-8">
+          <div class="card mb-4">
+            <div class="card-header py-3">
+              <strong class="mb-0">{{ 'Summary of the Order : ' + localStorageValue}}</strong>
+            </div>
+            <div class="card-body">
+
+              <!-- Single item -->
+              @for(product of products; track product.id; let i = $index) {
+              <div class="row">
+                <div class="col-lg-3 col-md-12 mb-4 mb-lg-0">
+                  <!-- Image -->
+                  <div class="bg-image hover-overlay hover-zoom ripple rounded" data-mdb-ripple-color="light">
+                    <img src={{product.images[0]}}
+                      class="w-100" alt="Blue Jeans Jacket" />
+                    <a href="#!">
+                      <div class="mask" style="background-color: rgba(251, 251, 251, 0.2)"></div>
+                    </a>
+                  </div>
+                  <!-- Image -->
+                </div>
+  
+                <div class="col-lg-5 col-md-6 mb-4 mb-lg-0">
+                  <!-- Data -->
+                  <p><strong>{{ product.productName }}</strong></p>
+                 
+                  <p>{{ 'Size : ' +  product.size }}</p>
+
+                  <p>{{ 'Quantity : ' +  product.quantity }}</p>
+
+                  <p>{{ 'Order date : ' +  product.created_at }}</p>
+
+
+
+                  <div class="card-footer p-4 pt-0 border-top-0 ">
+                    
+                </div>
+                  
+                  <!-- Data -->
+                </div>
+  
+                <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
+                  <!-- Quantity -->
+                  <div class="d-flex mb-4" style="max-width: 300px">
+                    
+                
+                    
+                
+                    
+                  </div>
+                  <!-- Quantity -->
+                
+                  <!-- Price -->
+                  <p class="text-start text-md-center">
+                    <strong>{{ 'Price : ' + '€ ' + product.price }}</strong>
+                    
+                  </p>
+                </div>
+                
+                
+              </div>
+
+              <hr class="my-4" />
+            }
