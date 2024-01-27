@@ -9,6 +9,7 @@ import { ToastrService } from 'ngx-toastr';
 import { MatIconModule } from '@angular/material/icon';
 import { FavoriteService } from '../favorites.service';
 import { Router } from '@angular/router';
+import { OrderService } from '../orders.service';
 
 // Component decorator to define the component metadata
 @Component({
@@ -24,7 +25,7 @@ export class Euro2024Component implements OnInit {
   toaster: any; // Toastr service for notifications
   
   // Constructor to inject services
-  constructor(private productService: ProductService, private localStorageService: LocalStorageService, private favoriteService: FavoriteService, private router: Router) {
+  constructor(private productService: ProductService, private localStorageService: LocalStorageService, private favoriteService: FavoriteService, private router: Router, private orderService: OrderService) {
     
   
     this.toaster = inject(ToastrService); // Inject ToastrService
@@ -50,40 +51,67 @@ export class Euro2024Component implements OnInit {
   }
 
   // Method to add a product to the cart
-  addToCart(size: string, product: any) {
+  async addToCart(size: string, product: any) {
     if (!size) {
         this.toaster.error("Select a size");
         return; // End transaction if customer did not select a size
-    }
-    this.toaster.success(`${product.productName} added to cart`);
+    } 
+    //if the user is not logged in then redirect to login
+    if(!this.localStorageService.getLocalStorageValue('user')){
+      this.toaster.error("Please login to add to cart");
+      this.router.navigateByUrl('/login');
 
+
+      return
+    }
+   
     console.log(`Selected Size: ${size}`);
     product.size = size;
     
-    // Retrieve products from local storage
-    let products = this.localStorageService.getLocalStorageValue('cart');
-    console.log(products);
+    let user = this.localStorageService.getLocalStorageValue('user'); 
+    let ordProducts = await this.orderService.getOrdersByUserId(user.id); 
+   
+    console.log(user);
+    console.log(ordProducts);
 
-    // Initialize cartProducts array or retrieve from local storage
-    let cartProducts = products ?? [];
-    
-    // Check if the product is already in the cart
-    let cartProductFind = cartProducts.find((p: any)=> p.id == product.id && p.size == size);
-    if (cartProductFind) {
-      cartProductFind.quantity = cartProductFind.quantity + 1; // Increment quantity if product is already in the cart
-    } else {
-      product.quantity = 1;
-      cartProducts.push(product); // Add the product to the cart if it's not already present
+  
+    let orderProducts = ordProducts ?? [];
+    let orderProductFind = orderProducts.find((p: any)=> p.id == product.id && p.size == size);
+    if (!orderProductFind) { 
+      let order = {
+        user_id: user.id,
+        product_id: product.id,
+        size: size,
+        quantity: 1 
+      }
+     let response = await this.orderService.createOrder(order);  
+     if(response.status==200){
+      this.toaster.success(`${product.productName} added to cart`);
+     }
     }
-
-    // Update the cart in local storage
-    this.localStorageService.setLocalStorageValue('cart', cartProducts);
+    else {
+      orderProductFind.quantity += 1;
+      let order = {
+        user_id: user.id,
+        product_id: product.id,
+        size: size,
+        quantity: orderProductFind.quantity 
+      }
+     let response = await this.orderService.updateOrder(order, orderProductFind.order_id);  
+     if(response.status==200){
+      this.toaster.success(`${product.productName} added to cart`);
+     }
+    }   
+    
   }
   async addToFavorites(size: string, product: any) {
     if (!size) {
         this.toaster.error("Select a size");
         return; // End transaction if customer did not select a size
-    } 
+    } //if size is already in favorites then give error
+    
+    
+ 
     //if the user is not logged in then redirect to login
     if(!this.localStorageService.getLocalStorageValue('user')){
       this.toaster.error("Please login to add to favorites");
@@ -101,6 +129,7 @@ export class Euro2024Component implements OnInit {
    
     console.log(user);
     console.log(favProducts);
+
   
     let favoriteProducts = favProducts ?? [];
     let favoriteProductFind = favoriteProducts.find((p: any)=> p.id == product.id && p.size == size);
@@ -121,5 +150,6 @@ export class Euro2024Component implements OnInit {
     }   
     
   }
+
 }
 
