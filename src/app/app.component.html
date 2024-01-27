@@ -41,11 +41,19 @@
                   ></a>
                 </span>
               </li>
+              <li class="nav-item">
+                <span class="m-3">
+                  <a routerLink="/order">
+                    <mat-icon class="black-icon">restore</mat-icon>
+                  </a>
+                </span>
+              </li>
               <!-- Shopping Cart Link -->
               <li class="nav-item">
                 <span class="m-3">
                   <a routerLink="/shoppingcart">
                     <mat-icon class="black-icon">shopping_cart</mat-icon>
+                  
                     <span class="badge bg-dark text-white ms-1 rounded-pill"> {{ ordersTotalQuantity }}</span> 
                   </a>
                 </span>
@@ -81,15 +89,15 @@
               <li class="nav-item">
                 <a class="nav-link" href="/euro2024" style="color: white;">Euro 2024</a>
               </li>
-              <li class="nav-item myorders">
-                <a class="nav-link" href="/order" style="color: white;">My Orders</a>
-              </li>
+              
             </ul>
             <!-- "Welcome, User" message and Logout button at the end -->
-           <div   [ngStyle]="{ 'display': !isVisible ? 'block' : 'none' }"  class="ms-auto d-flex align-items-center " >
-              <a  class="nav-link welcome"  style="color: white;">Welcome {{ currentUser.name }}</a>
-             <button (click)="logout()" class="btn" type="button" style="background-color: rgb(219, 38, 38); color: white;">Logout</button>
-            </div> 
+             @if (currentUser.name) {<div class="ms-auto d-flex align-items-center">
+              <a class="nav-link welcome" style="color: white;">Welcome {{ currentUser.name }}</a>
+              <button (click)="logout()" class="btn" type="button" style="background-color: rgb(219, 38, 38); color: white;">Logout</button>
+             </div>}
+            
+             
           </div>
         </div>
       </nav>

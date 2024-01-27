@@ -32,7 +32,8 @@ export class FavoriteComponent implements OnInit {
   async ngOnInit() {
 
     let user = this.localStorageService.getLocalStorageValue('user'); 
-    let products = await this.favoriteService.getFavoritesByUserId(user.id); 
+    let products = user ?  await  this.favoriteService.getFavoritesByUserId(user.id): []; 
+    
     console.log("products",products);      
     this.products = products; 
     // Process product images

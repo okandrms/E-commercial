@@ -2,7 +2,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
-import { MatIconModule } from '@angular/material/icon';
+import { MatIconModule, MatIconRegistry } from '@angular/material/icon';
 import { SlickCarouselModule } from 'ngx-slick-carousel';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -14,6 +14,7 @@ import { FavoriteService } from './favorites.service';
 import { OrderService } from './orders.service';
 import { ToastrService } from 'ngx-toastr';
 import { UserService } from './userservice.service';
+
 
 
 // Define the component metadata
@@ -47,7 +48,7 @@ export class AppComponent implements OnInit {
   
  
   // Constructor with dependency injection
-  constructor(private router: Router,private localStorageService: LocalStorageService,private favoriteService: FavoriteService,private orderService: OrderService, private toastr: ToastrService, private userService: UserService) {}
+  constructor(private router: Router,private localStorageService: LocalStorageService,private favoriteService: FavoriteService,private orderService: OrderService, private toastr: ToastrService, private userService: UserService, iconRegistry: MatIconRegistry) {}
 
 
   // Method to redirect to the search page
