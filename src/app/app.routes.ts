@@ -10,7 +10,7 @@ import { ShoppingcartComponent } from './shoppingcart/shoppingcart.component';
 import { FavoriteComponent } from './favorite/favorite.component';
 import { SearchComponent } from './search/search.component';
 import { BuynowComponent } from './buynow/buynow.component';
-
+import { OrderComponent } from './order/order.component'; 
 
 
 
@@ -66,9 +66,11 @@ export const routes: Routes = [
         path: 'buynow',
         component: BuynowComponent
         },
+        {
+        path: 'order',
+        component: OrderComponent
+        }
         
 
-
-    
 
 ];

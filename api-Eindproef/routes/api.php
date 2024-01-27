@@ -272,6 +272,43 @@ Route::delete('/favorites/{id}', function ($id) {
 });
 
 
+Route::post('/confirmedorders', function (Request $request) {
+    
+    $data = $request->validate([
+        '*.user_id' => 'required|numeric',      
+        '*.product_id' => 'required|numeric',
+        '*.size' => 'required|string',
+        '*.quantity' => 'required|numeric',
+        '*.timestamps' => 'boolean',
+        // Add other validation rules as needed
+    ]);
+
+    $data = array_map(function($item) {
+        $item['created_at'] = now();
+        $item['updated_at'] = now();
+        return $item;
+    }, $data);
+      
+    $insertedIds = DB::table('confirmedorders')->insert($data);
+    
+    return response()->json(['inserted_ids' => $insertedIds]);
+        
+
+});
+
+Route::get('/confirmedorders/{user_id}', function ($user_id) {
+          
+      $results = DB::select("SELECT p.*,o.size, o.quantity, o.id as order_id, o.created_at FROM products p inner join confirmedorders o on p.id = o.product_id WHERE o.user_id = ?", [$user_id]);
+      
+       return  $results;   
+});
+
+
+
+
+
+
+
 
 
 
