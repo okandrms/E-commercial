@@ -13,13 +13,15 @@ import { Subscription } from 'rxjs';
 import { FavoriteService } from './favorites.service';
 import { OrderService } from './orders.service';
 import { ToastrService } from 'ngx-toastr';
+import { UserService } from './userservice.service';
+
 
 // Define the component metadata
 @Component({
   selector: 'app-root',
   standalone: true,
   // Import required modules for the component
-  imports: [CommonModule, RouterOutlet, MatIconModule, SlickCarouselModule, RouterModule, FontAwesomeModule, FormsModule,],
+  imports: [CommonModule, RouterOutlet, MatIconModule, SlickCarouselModule, RouterModule, FontAwesomeModule, FormsModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
@@ -27,6 +29,9 @@ import { ToastrService } from 'ngx-toastr';
 // Define the main AppComponent class
 export class AppComponent implements OnInit {
   [x: string]: any;
+
+
+
   // Define component properties
   title = 'Eindproef';
   term: any ;
@@ -34,13 +39,15 @@ export class AppComponent implements OnInit {
   ordersTotalQuantity : number = 0; 
   localStorageValueFavorite : number = 0;
   private subscription: Subscription = new Subscription();
+  private subscriptionLogin: Subscription = new Subscription();
   private subscriptionFavorite: Subscription = new Subscription();
   toaster: any;
+  isVisible: boolean = false;
 
   
  
   // Constructor with dependency injection
-  constructor(private router: Router,private localStorageService: LocalStorageService,private favoriteService: FavoriteService,private orderService: OrderService, private toastr: ToastrService) {}
+  constructor(private router: Router,private localStorageService: LocalStorageService,private favoriteService: FavoriteService,private orderService: OrderService, private toastr: ToastrService, private userService: UserService) {}
 
 
   // Method to redirect to the search page
@@ -70,6 +77,20 @@ export class AppComponent implements OnInit {
         this.ordersTotalQuantity = userOrders ? this.calculateTotalQuantity(userOrders) : 0;  
     });
 
+    this.subscriptionLogin = this.userService.login$.subscribe(async value => {
+
+      let user = await this.localStorageService.getLocalStorageValue('user');
+      this.currentUser= user ? user :  {name: "", email: ""};
+      this.isVisible = true;
+
+      let userOrders =  user ? await this.orderService.getOrdersByUserId(user.id) : [];  
+      this.ordersTotalQuantity = userOrders ? this.calculateTotalQuantity(userOrders) : 0;  
+
+      let productsFavourites = user ? await this.favoriteService.getFavoritesByUserId(user.id): [];  
+        this.localStorageValueFavorite = productsFavourites ? productsFavourites.length : 0; 
+
+    })
+
     // Get the current user from local storage
     let tempUser = await this.localStorageService.getLocalStorageValue('user');
    
@@ -97,14 +118,26 @@ logout() {
     this.toastr.success(`Logged out successfully`);
     // Clear local storage
     this.localStorageService.clearLocalStorage();
+    // Set the counter to null
+    this.ordersTotalQuantity = 0;
+    this.localStorageValueFavorite = 0;
+    this.currentUser = {name: "", email: ""};
+    this.isVisible = false;
+
+  
     // Redirect to login
     this.router.navigateByUrl('/login');
+
   } else {
     // Display toaster message if user is not logged in
     this.toastr.error('You are not logged in');
     // Redirect to login
     this.router.navigateByUrl('/login');
+
+
   }
+
+
 }
 
 

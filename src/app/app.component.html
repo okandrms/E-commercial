@@ -83,10 +83,10 @@
               </li>
             </ul>
             <!-- "Welcome, User" message and Logout button at the end -->
-            <div class="ms-auto d-flex align-items-center">
-              <a v-if="currentUser" class="nav-link welcome" style="color: white;">Welcome {{ currentUser.name }}</a>
-              <button (click)="logout()" class="btn" type="button" style="background-color: rgb(219, 38, 38); color: white;">Logout</button>
-            </div>
+           <div   [ngStyle]="{ 'display': !isVisible ? 'block' : 'none' }"  class="ms-auto d-flex align-items-center " >
+              <a  class="nav-link welcome"  style="color: white;">Welcome {{ currentUser.name }}</a>
+             <button (click)="logout()" class="btn" type="button" style="background-color: rgb(219, 38, 38); color: white;">Logout</button>
+            </div> 
           </div>
         </div>
       </nav>
