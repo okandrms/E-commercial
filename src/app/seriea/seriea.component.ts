@@ -8,6 +8,7 @@ import { ToastrService } from 'ngx-toastr';
 import { FavoriteService } from '../favorites.service';
 import { Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
+import { OrderService } from '../orders.service';
 
 
 @Component({
@@ -27,7 +28,7 @@ export class SerieaComponent implements OnInit {
   toaster: any;
 
   // Constructor to inject services
-  constructor(private productService: ProductService, private localStorageService: LocalStorageService,private favoriteService: FavoriteService, private router: Router) {
+  constructor(private productService: ProductService, private localStorageService: LocalStorageService,private favoriteService: FavoriteService, private router: Router, private orderService: OrderService) {
     // Initialize Toastr service
     this.toaster = inject(ToastrService);
   }
@@ -52,46 +53,67 @@ export class SerieaComponent implements OnInit {
   }
 
   // Function to handle adding a product to the cart
-  addToCart(size: string, product: any) {
-    // Check if a size is selected
+  async addToCart(size: string, product: any) {
     if (!size) {
-      this.toaster.error("Select a size");
-      return; // End transaction if the customer did not select a size
-    }
-    
-    // Display success notification
-    this.toaster.success(`${product.productName} added to cart`);
+        this.toaster.error("Select a size");
+        return; // End transaction if customer did not select a size
+    } 
+    //if the user is not logged in then redirect to login
+    if(!this.localStorageService.getLocalStorageValue('user')){
+      this.toaster.error("Please login to add to cart");
+      this.router.navigateByUrl('/login');
 
-    // Log selected size
+
+      return
+    }
+   
     console.log(`Selected Size: ${size}`);
     product.size = size;
+    
+    let user = this.localStorageService.getLocalStorageValue('user'); 
+    let ordProducts = await this.orderService.getOrdersByUserId(user.id); 
+   
+    console.log(user);
+    console.log(ordProducts);
 
-    // Retrieve cart items from local storage
-    let products = this.localStorageService.getLocalStorageValue('cart');
-    console.log(products);
-
-    // Initialize cart products or use an empty array if null
-    let cartProducts = products ?? [];
-
-    // Check if the product is already in the cart
-    let cartProductFind = cartProducts.find((p: any) => p.id == product.id && p.size == size);
-
-    // If product is in the cart, increment quantity; otherwise, add to cart
-    if (cartProductFind) {
-      cartProductFind.quantity = cartProductFind.quantity + 1;
-    } else {
-      product.quantity = 1;
-      cartProducts.push(product);
+  
+    let orderProducts = ordProducts ?? [];
+    let orderProductFind = orderProducts.find((p: any)=> p.id == product.id && p.size == size);
+    if (!orderProductFind) { 
+      let order = {
+        user_id: user.id,
+        product_id: product.id,
+        size: size,
+        quantity: 1 
+      }
+     let response = await this.orderService.createOrder(order);  
+     if(response.status==200){
+      this.toaster.success(`${product.productName} added to cart`);
+     }
     }
-
-    // Update cart in local storage
-    this.localStorageService.setLocalStorageValue('cart', cartProducts);
+    else {
+      orderProductFind.quantity += 1;
+      let order = {
+        user_id: user.id,
+        product_id: product.id,
+        size: size,
+        quantity: orderProductFind.quantity 
+      }
+     let response = await this.orderService.updateOrder(order, orderProductFind.order_id);  
+     if(response.status==200){
+      this.toaster.success(`${product.productName} added to cart`);
+     }
+    }   
+    
   }
   async addToFavorites(size: string, product: any) {
     if (!size) {
         this.toaster.error("Select a size");
         return; // End transaction if customer did not select a size
-    } 
+    } //if size is already in favorites then give error
+    
+    
+ 
     //if the user is not logged in then redirect to login
     if(!this.localStorageService.getLocalStorageValue('user')){
       this.toaster.error("Please login to add to favorites");
@@ -109,6 +131,7 @@ export class SerieaComponent implements OnInit {
    
     console.log(user);
     console.log(favProducts);
+
   
     let favoriteProducts = favProducts ?? [];
     let favoriteProductFind = favoriteProducts.find((p: any)=> p.id == product.id && p.size == size);
@@ -129,6 +152,7 @@ export class SerieaComponent implements OnInit {
     }   
     
   }
+
 }
 
 
