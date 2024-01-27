@@ -7,6 +7,7 @@ import { RouterLink } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { UserService } from '../userservice.service';
 import { LocalStorageService } from '../local-storage.service';
+import { BehaviorSubject } from 'rxjs';
 
 // Component decorator to define the component metadata
 @Component({
@@ -22,7 +23,12 @@ export class LoginComponent {
     username: '',
     password: '',
     loginForm: FormGroup, Validators, FormBuilder, // Define a FormGroup for the login form;
+  
   };
+
+ 
+
+     
 
   // Object to store account information
   account: any = {
@@ -70,6 +76,7 @@ export class LoginComponent {
     this.userService.createUser(this.account);
     // Display success message
     this.toaster.success('Account created successfully');
+
     
     
     // Empty account fields
@@ -110,6 +117,7 @@ export class LoginComponent {
       this.localStorageService.setLocalStorageValue('user', data.data);
       // Display success message
       this.toaster.success('Login successful');
+      this.userService.triggerAppComponent();
       // Navigate to the home route
       this.router.navigateByUrl('/home');
       

@@ -1,5 +1,6 @@
 // Importing required modules and decorators
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 
 // Decorator to mark the class as injectable and define its scope
 @Injectable({
@@ -9,6 +10,11 @@ export class UserService {
   // API endpoints for user-related operations
   private apiUrl = 'http://127.0.0.1:8000/api/users/';
   private loginUrl = 'http://127.0.0.1:8000/api/login';
+
+  // BehaviorSubject to emit changes in the localStorage
+  private loginSubject = new BehaviorSubject<string | null>(null);
+  // Observable to subscribe to changes in the localStorage
+  login$ = this.loginSubject.asObservable();
 
   // Constructor for the service
   constructor() {}
@@ -34,9 +40,12 @@ export class UserService {
       },
       body: JSON.stringify(account)
     });
-
     // Returning the response object for further processing
     return response;
+  }
+
+  triggerAppComponent() {
+    this.loginSubject.next("Login success");
   }
 
 }
