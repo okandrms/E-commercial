@@ -2,7 +2,7 @@ body, h1, h2, p, button {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    
+
 }
 
 body {
@@ -69,3 +69,8 @@ button[type="button"]:hover {
         padding: 10px;
     }
 }
+
+
+
+
+
