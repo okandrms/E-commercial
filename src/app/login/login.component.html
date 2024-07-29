@@ -10,8 +10,10 @@
 
   <!-- Row for login and create account forms -->
   <div class="row">
+
       <!-- Column for login form -->
-      <div class="col col-md-6">
+
+      <div class="col col-md-6 flex">
           <h2>Login</h2>
           <hr>
 
@@ -29,42 +31,14 @@
 
           <!-- Login button -->
           <button type="button" (click)="login()" class="btn btn-danger mt-3">Login</button>
+
+          <!-- Create Account link -->
+          <a routerLink="/create" class="btn btn-link mt-3">Create Account</a>
+
           <!-- Forgot password link -->
-          <a href="" class="btn btn-link mt-3">Forgot password?</a>
+          <a routerLink="/forgotpassword" class="btn btn-link mt-3">Forgot password?</a>
       </div>
 
-      <!-- Column for create account form -->
-      <div class="col col-md-6">
-          <h2>Create Account</h2>
-          <hr>
-          <div>
-              <!-- First name input -->
-              <div class="form-group">
-                  <label for="fname">First name</label>
-                  <input type="text" class="form-control" [(ngModel)]="account.name" id="fname" placeholder="First name">
-              </div>
 
-              <!-- Last name input -->
-              <div class="form-group">
-                  <label for="lname">Last name</label>
-                  <input type="text" class="form-control" [(ngModel)]="account.surname" id="lname" placeholder="Last name">
-              </div>
-
-              <!-- Email input -->
-              <div class="form-group">
-                  <label for="email2">Email address</label>
-                  <input type="email" class="form-control" [(ngModel)]="account.email" id="email2" aria-describedby="emailHelp" placeholder="Enter email">
-              </div>
-
-              <!-- Password input -->
-              <div class="form-group">
-                  <label for="pwd2">Password</label>
-                  <input type="password" class="form-control" [(ngModel)]="account.password" id="pwd2" placeholder="Password">
-              </div>
-
-              <!-- Create Account button -->
-              <button type="button" (click)="createAccount()" class="btn btn-danger mt-3">Create Account</button>
-          </div>
-      </div>
   </div>
 </div>
