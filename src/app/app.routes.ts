@@ -10,7 +10,10 @@ import { ShoppingcartComponent } from './shoppingcart/shoppingcart.component';
 import { FavoriteComponent } from './favorite/favorite.component';
 import { SearchComponent } from './search/search.component';
 import { BuynowComponent } from './buynow/buynow.component';
-import { OrderComponent } from './order/order.component'; 
+import { OrderComponent } from './order/order.component';
+import { RegisterComponent } from './register/register.component';
+import { ResetpasswordComponent} from './resetpassword/resetpassword.component';
+import { ForgotpasswordComponent } from './forgotpassword/forgotpassword.component';
 
 
 
@@ -34,6 +37,22 @@ export const routes: Routes = [
         path: 'login',
         component: LoginComponent
         },
+
+        {
+          path: 'forgotpassword',
+          component: ForgotpasswordComponent
+          },
+
+        {
+        path: 'register',
+        component: RegisterComponent
+        },
+
+        {
+        path: 'resetpassword',
+        component: ResetpasswordComponent
+        },
+
         {
         path: 'premierleague',
         component: PremierleagueComponent
@@ -70,7 +89,7 @@ export const routes: Routes = [
         path: 'order',
         component: OrderComponent
         }
-        
+
 
 
 ];

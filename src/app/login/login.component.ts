@@ -1,11 +1,12 @@
-// Import necessary modules and components from Angular
-import { Component, inject, OnInit } from '@angular/core';
-import { FormsModule, ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { Component, inject } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { UserService } from '../userservice.service';
 import { LocalStorageService } from '../local-storage.service';
 
+// Component decorator to define the component metadata
 @Component({
   selector: 'app-login', // Selector for the component
   standalone: true,
@@ -13,94 +14,78 @@ import { LocalStorageService } from '../local-storage.service';
   templateUrl: './login.component.html', // HTML template file
   styleUrls: ['./login.component.css'] // CSS style file
 })
-export class LoginComponent implements OnInit {
-[x: string]: any;
-  // Form groups for the forms
-  registerForm!: FormGroup;
-  loginForm!: FormGroup;
+export class LoginComponent {
+  // Form group for login form
+  loginForm: FormGroup;
 
   // ToastrService instance for displaying notifications
   toaster: ToastrService;
 
+  // Object to store login information
   lgn: any = {
-
     email: '',
     password: '',
-
   };
 
-  // Object to store account information
-  account: any = {
-    name: '',
-    surname: '',
-    email: '',
-    password: '',
-
-  };
-
+  // Constructor to inject necessary services and initialize form
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
     private userService: UserService,
     private localStorageService: LocalStorageService
   ) {
+    // Inject ToastrService
     this.toaster = inject(ToastrService);
-  }
 
-  ngOnInit(): void {
-    this.registerForm = this.formBuilder.group({
-      name: ['', Validators.required],
-      surname: ['', Validators.required],
+    // Initialize the login form with validation
+    this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]]
     });
-
-    this.loginForm = this.formBuilder.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required]
-    });
   }
 
-  createAccount() {
-    if (this.localStorageService.getLocalStorageValue('user')) {
-      this.toaster.error('Logged in, please logout to create a new account');
-      return;
-    }
-
-    if (this.registerForm.invalid) {
-      this.toaster.error('Please fill all the fields correctly');
-      return;
-    }
-
-    this.userService.createUser(this.registerForm.value).then(() => {
-      this.toaster.success('Account created successfully');
-      this.registerForm.reset();
-    }).catch(error => {
-      this.toaster.error('Error creating account: ' + error.message);
-    });
-  }
-
+  // Method to handle the login process
   async login() {
+    // Check if form is valid
     if (this.loginForm.invalid) {
       this.toaster.error('Empty fields');
       return;
     }
 
+    // Check if the user is already logged in
     if (this.localStorageService.getLocalStorageValue('user')) {
       this.toaster.error('Already Logged In, please logout');
       return;
     }
 
-    let response = await this.userService.login(this.loginForm.value);
-    let data = await response.json();
+    // Get form values
+    const loginData = this.loginForm.value;
+    console.log(loginData);
 
-    if (response.status === 200) {
-      this.localStorageService.setLocalStorageValue('user', data.data);
-      this.toaster.success('Login successful');
-      this.userService.triggerAppComponent();
-      this.router.navigateByUrl('/home');
-    } else {
-      this.toaster.error('Wrong username or password');
+    try {
+      // Call user service to perform login
+      const response: Response = await this.userService.login(loginData);
+
+      // Check the status of the response
+      if (response.ok) {
+        // Parse response data
+        const data = await response.json();
+        console.log(data);
+
+        // Store user information in local storage
+        this.localStorageService.setLocalStorageValue('user', data.data);
+        // Display success message
+        this.toaster.success('Login successful');
+        this.userService.triggerAppComponent();
+        // Navigate to the home route
+        this.router.navigateByUrl('/home');
+      } else {
+        // Display error message for wrong username or password
+        this.toaster.error('Wrong username or password');
+      }
+    } catch (error) {
+      this.toaster.error('An error occurred');
     }
   }
 }
+
