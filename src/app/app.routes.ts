@@ -11,7 +11,7 @@ import { FavoriteComponent } from './favorite/favorite.component';
 import { SearchComponent } from './search/search.component';
 import { BuynowComponent } from './buynow/buynow.component';
 import { OrderComponent } from './order/order.component';
-import { CreateComponent } from './create/create.component';
+import { RegisterComponent } from './register/register.component';
 import { ResetpasswordComponent} from './resetpassword/resetpassword.component';
 import { ForgotpasswordComponent } from './forgotpassword/forgotpassword.component';
 
@@ -44,8 +44,8 @@ export const routes: Routes = [
           },
 
         {
-        path: 'create',
-        component: CreateComponent
+        path: 'register',
+        component: RegisterComponent
         },
 
         {

@@ -1,0 +1,49 @@
+<!-- Main container -->
+<div class="container">
+  <!-- Row for image -->
+  <div class="row">
+      <div class="col col-md-12">
+          <!-- Image for the login page -->
+          <img class="img" src="https://www.voetbalshop.be/media/bestanden/2023/Q2/vbs/cat-header/20230530-catheader-PUMA-ACMilan-HOME.jpg" alt="" width="100%" height="100%">
+      </div>
+  </div>
+
+  <!-- Row for login and create account forms -->
+  <div class="row">
+
+      <!-- Column for create account form -->
+      <div class="col col-md-6">
+          <h2>Create Account</h2>
+          <hr>
+          <div class="form">
+              <!-- First name input -->
+              <div class="form-group">
+
+                  <input type="text" class="form-control" [(ngModel)]="account.name" id="fname" placeholder="First name">
+              </div>
+
+              <!-- Last name input -->
+              <div class="form-group">
+
+                  <input type="text" class="form-control" [(ngModel)]="account.surname" id="lname" placeholder="Last name">
+              </div>
+
+              <!-- Email input -->
+              <div class="form-group">
+
+                  <input type="email" class="form-control" [(ngModel)]="account.email" id="email2" aria-describedby="emailHelp" placeholder="Enter email">
+              </div>
+
+              <!-- Password input -->
+              <div class="form-group">
+
+                  <input type="password" class="form-control" [(ngModel)]="account.password" id="pwd2" placeholder="Password">
+              </div>
+
+              <!-- Create Account button -->
+              <button type="button" (click)="createAccount()" class="btn btn-danger mt-3">Create Account</button>
+          </div>
+      </div>
+  </div>
+</div>
+
