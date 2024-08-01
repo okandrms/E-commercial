@@ -15,29 +15,30 @@
       <div class="col col-md-6">
           <h2>Create Account</h2>
           <hr>
-          <div class="form">
+          <div class="form" [formGroup]="registerForm">
               <!-- First name input -->
               <div class="form-group">
-
-                  <input type="text" class="form-control" [(ngModel)]="account.name" id="fname" placeholder="First name">
+                  <input type="text" class="form-control" formControlName="name" id="fname" placeholder="First name">
               </div>
 
               <!-- Last name input -->
               <div class="form-group">
-
-                  <input type="text" class="form-control" [(ngModel)]="account.surname" id="lname" placeholder="Last name">
+                  <input type="text" class="form-control" formControlName="surname" id="lname" placeholder="Last name">
               </div>
 
               <!-- Email input -->
               <div class="form-group">
-
-                  <input type="email" class="form-control" [(ngModel)]="account.email" id="email2" aria-describedby="emailHelp" placeholder="Enter email">
+                  <input type="email" class="form-control" formControlName="email" id="email2" aria-describedby="emailHelp" placeholder="Enter email">
               </div>
 
               <!-- Password input -->
               <div class="form-group">
+                  <input type="password" class="form-control" formControlName="password" id="pwd2" placeholder="Password">
+              </div>
 
-                  <input type="password" class="form-control" [(ngModel)]="account.password" id="pwd2" placeholder="Password">
+              <!-- Confirm Password input -->
+              <div class="form-group">
+                <input type="password" class="form-control" formControlName="password_confirmation" id="pwd2" placeholder="Confirm Password">
               </div>
 
               <!-- Create Account button -->
@@ -46,4 +47,3 @@
       </div>
   </div>
 </div>
-
