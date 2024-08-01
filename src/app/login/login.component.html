@@ -12,25 +12,26 @@
   <div class="row">
 
       <!-- Column for login form -->
-
       <div class="col col-md-6 flex">
           <h2>Login</h2>
           <hr>
 
-          <!-- Email input -->
-          <div class="form-group">
-              <label for="exampleInputEmail1">Email address</label>
-              <input type="email" [(ngModel)]="lgn.email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-          </div>
+          <form [formGroup]="loginForm">
+            <!-- Email input -->
+            <div class="form-group">
+                <label for="exampleInputEmail1">Email address</label>
+                <input type="email" formControlName="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+            </div>
 
-          <!-- Password input -->
-          <div class="form-group">
-              <label for="exampleInputPassword1">Password</label>
-              <input type="password" [(ngModel)]="lgn.password" class="form-control" id="exampleInputPassword1" placeholder="Password">
-          </div>
+            <!-- Password input -->
+            <div class="form-group">
+                <label for="exampleInputPassword1">Password</label>
+                <input type="password" formControlName="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+            </div>
 
-          <!-- Login button -->
-          <button type="button" (click)="login()" class="btn btn-danger mt-3">Login</button>
+            <!-- Login button -->
+            <button type="button" (click)="login()" class="btn btn-danger mt-3">Login</button>
+          </form>
 
           <!-- Create Account link -->
           <a routerLink="/register" class="btn btn-link mt-3">Create Account</a>
@@ -38,7 +39,6 @@
           <!-- Forgot password link -->
           <a routerLink="/forgotpassword" class="btn btn-link mt-3">Forgot password?</a>
       </div>
-
 
   </div>
 </div>
