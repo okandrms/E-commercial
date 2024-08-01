@@ -238,22 +238,17 @@ Route::delete('/users/{id}', function ($id) {
 Route::post('/login', function (Request $request) {
 
     $data = $request->validate([
-        'name' => 'required|string|max:255',
-        'surname' => 'required|string|max:255',
-        'email' => 'required|string|email|max:255|unique:users',
-        'password' => 'required|string|min:8|confirmed',
-        // Add other fields as needed
+        'email' => 'required|string|email|max:255',
+        'password' => 'required|string|min:8',
     ]);
 
-    $result = DB::select("SELECT id, name, email FROM users  WHERE email = ? AND password = ?", [$data['email'], $data['password']]);
+    $user = DB::table('users')->where('email', $data['email'])->first();
 
-    if( $result) {
-        return response()->json(['message' => 'Login successful', 'data' => $result[0]], 200);
+    if ($user && Hash::check($data['password'], $user->password)) {
+        return response()->json(['message' => 'Login successful', 'data' => $user], 200);
     } else {
         return response()->json(['message' => 'Login failed'], 401);
     }
-
-
 });
 
 Route::post('/orders', function (Request $request) {

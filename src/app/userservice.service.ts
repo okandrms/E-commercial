@@ -46,7 +46,7 @@ export class UserService {
   }
 
 
-  async login(credentials: { email: string, password: string }): Promise<any> {
+  async login(credentials: { email: string, password: string }): Promise<Response> {
     const loginUrl = 'http://127.0.0.1:8000/api/login';
     try {
       const response = await fetch(loginUrl, {
@@ -57,18 +57,13 @@ export class UserService {
         body: JSON.stringify(credentials)
       });
 
-      if (!response.ok) {
-        const errorResponse = await response.json();
-        throw new Error(errorResponse.message || 'Login failed');
-      }
-
-      const result = await response.json();
-      return result;
+return response;
     } catch (error) {
       console.error('Error logging in:', error);
       throw error;
     }
   }
+
 
   triggerAppComponent() {
     this.loginSubject.next("Login success");
