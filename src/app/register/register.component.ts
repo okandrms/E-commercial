@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -15,18 +15,15 @@ import { LocalStorageService } from '../local-storage.service';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent {
-  // Define a FormGroup for the registration form
   registerForm: FormGroup;
-  toaster: ToastrService;
 
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
     private userService: UserService,
-    private localStorageService: LocalStorageService
+    private localStorageService: LocalStorageService,
+    private toastr: ToastrService  // Correctly inject ToastrService through constructor
   ) {
-    this.toaster = inject(ToastrService);
-
     // Initialize the form with validators
     this.registerForm = this.formBuilder.group({
       name: ['', Validators.required],
@@ -37,42 +34,46 @@ export class RegisterComponent {
     });
   }
 
-  account: any = { name: '', surname: '', email: '', password: '', };
-
   // Function to handle form submission
   async createAccount() {
     if (this.localStorageService.getLocalStorageValue('user')) {
-      this.toaster.error('Logged in, please logout to create a new account');
+      this.toastr.error('Logged in, please logout to create a new account');
       return;
     }
 
     if (this.registerForm.invalid) {
-      this.toaster.error('Please fill all fields correctly');
+      this.toastr.error('Please fill all fields correctly');
       return;
     }
 
-    // Extract form values
     const { name, surname, email, password, password_confirmation } = this.registerForm.value;
 
     if (password !== password_confirmation) {
-      this.toaster.error('Passwords do not match');
+      this.toastr.error('Passwords do not match');
       return;
     }
 
     // Call user service to create a new user
     try {
+      console.log('Creating user with:', { name, surname, email, password, password_confirmation });
       const response = await this.userService.createUser({ name, surname, email, password, password_confirmation });
-      if (response.ok) {
-        this.toaster.success('Account created successfully');
+
+
+
+      if (response.id) {
+
+        console.log('User created successfully:', response);
+        this.toastr.success('Account created successfully');
         this.registerForm.reset();
-        this.router.navigate(['/login']); // Redirect to login page or another page
+        this.router.navigate(['/login']);
       } else {
-        const errorResponse = await response.json();
-        this.toaster.error(errorResponse.message || 'Failed to create account');
+
+        console.error('Error response:', response);
+        this.toastr.error(response || 'Failed to create account');
       }
     } catch (error) {
-      this.toaster.error('Failed to create account');
-      console.error(error);
+      console.error('Failed to create account:', error);
+      this.toastr.error('Failed to create account');
     }
   }
 }

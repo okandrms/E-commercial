@@ -22,7 +22,7 @@ class RegisterController extends Controller
             'name' => $request->name,
             'surname' => $request->surname,
             'email' => $request->email,
-            'password' => $request->password, // The password is automatically hashed in the model
+            'password' => Hash::make($request->password), // Hash the password before storing it in the database
         ]);
 
         auth()->login($user);
@@ -30,3 +30,4 @@ class RegisterController extends Controller
         return response()->json(['message' => 'User registered successfully'], 201);
     }
 }
+

@@ -2,13 +2,12 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\TeamController;
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\StockController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+
 
 
 /*
@@ -28,6 +27,8 @@ use Illuminate\Support\Facades\Hash;
 
 
 // });
+// Route::post('/register', [RegisterController::class, 'register']);
+// Route::post('/login', [LoginController::class, 'login']);
 
 Route::get('/teams', function () {
     return DB::table('teams')->get();
@@ -180,26 +181,44 @@ Route::delete('/stocks/{id}', function ($id) {
 });
 
 // User CRUD Operations
-Route::post('/users', function (Request $request) {
-    $data = $request->validate([
-        'name' => 'required|string',
-        'email' => 'required|string',
-        'password' => 'required|string',
-        // Add other fields as needed
+Route::post('/register', function (Request $request) {
+    // Validate the request data
+    $validator = Validator::make($request->all(), [
+        'name' => 'required|string|max:255',
+        'surname' => 'required|string|max:255',
+        'email' => 'required|string|email|max:255|unique:users',
+        'password' => 'required|string|min:8|confirmed',
     ]);
 
-    // Insert the new users into the database
-    $stock = DB::table('users')->insertGetId($data);
+    // If validation fails, return the errors
+    if ($validator->fails()) {
+        return response()->json(['errors' => $validator->errors()], 422);
+    }
 
-    return response()->json(['message' => 'Your account informations created successfully', 'id' => $stock], 201);
+    // Get the validated data
+    $data = $validator->validated();
+
+    // Hash the password
+    $data['password'] = Hash::make($data['password']);
+
+    // Remove the password_confirmation field as it's not needed for insertion
+    unset($data['password_confirmation']);
+
+    // Insert the user into the database
+    $userId = DB::table('users')->insertGetId($data);
+
+    // Return a successful response with the created user's ID
+    return response()->json(['message' => 'Account created successfully', 'id' => $userId], 201);
 });
+
 
 Route::put('/users', function (Request $request) {
     $data = $request->validate([
         'id' => 'required|numeric',
-        'name' => 'required|string',
-        'email' => 'required|string',
-        'password' => 'required|string',
+        'name' => 'required|string|max:255',
+        'surname' => 'required|string|max:255',
+        'email' => 'required|string|email|max:255|unique:users',
+        'password' => 'required|string|min:8|confirmed',
         // Add other fields as needed
     ]);
 
@@ -219,8 +238,10 @@ Route::delete('/users/{id}', function ($id) {
 Route::post('/login', function (Request $request) {
 
     $data = $request->validate([
-        'email' => 'required|string',
-        'password' => 'required|string',
+        'name' => 'required|string|max:255',
+        'surname' => 'required|string|max:255',
+        'email' => 'required|string|email|max:255|unique:users',
+        'password' => 'required|string|min:8|confirmed',
         // Add other fields as needed
     ]);
 
